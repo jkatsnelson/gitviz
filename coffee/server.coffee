@@ -1,17 +1,19 @@
-express = require('express')
-routes = require('routes')
-http = require('http')
-path = require('path')
+express = require 'express'
+routes = require 'routes'
+http = require 'http'
+path = require 'path'
+everyauth = require 'everyauth'
 
 app = express()
 
-app.configure(()->
-	app.set('port', process.env.PORT || 3000);
-	app.use(app.router)
-)
+everyauth.helpExpress(app)
 
-app.get('/');
+app.configure () ->
+	app.set 'port', process.env.PORT || 3000
+	app.use app.router
 
-http.createServer(app).listen(app.get('port'), ()->
+
+app.get '/'
+
+http.createServer(app).listen app.get('port'), () ->
 	console.log "Express server listening on port #{app.get('port')}"
-)
