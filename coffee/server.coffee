@@ -3,6 +3,7 @@ routes = require 'routes'
 http = require 'http'
 path = require 'path'
 everyauth = require 'everyauth'
+db = require './db.js'
 
 app = express()
 
@@ -11,9 +12,6 @@ app.configure () ->
 	app.use app.router
 
 app.use("/", express.static(__dirname + '/../client/app/'))
-
-  # res.render('/')
-  # need something like 'res.render index'
 
 http.createServer(app).listen app.get('port'), () ->
 	console.log "Express server listening on port #{app.get('port')}"
