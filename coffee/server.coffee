@@ -3,7 +3,18 @@ routes = require 'routes'
 http = require 'http'
 path = require 'path'
 everyauth = require 'everyauth'
+mongoose = require 'mongoose'
 
+mongoose.connect('mongodb://localhost/fantasygithub')
+db = mongoose.connection
+db.on 'error', console.error.bind console, 'connection error:'
+db.once 'open', () ->
+  leagueSchema = mongoose.Schema
+    name: String
+    users: Array
+  userSchema = mongoose.Schema
+    gitSN: String
+    gitInfo: Object
 app = express()
 
 everyauth.helpExpress(app)
