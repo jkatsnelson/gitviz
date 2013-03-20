@@ -18,6 +18,6 @@
     return console.log("Got");
   };
 
-  exports.LeagueSchema = mongoose.model('leagues', LeagueSchema);
+  exports.League = mongoose.model('leagues', LeagueSchema);
 
 }).call(this);
