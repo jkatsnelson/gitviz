@@ -7,6 +7,7 @@
     "mongoose": "*",
     "flour": "*",
     "coffee-script": "*",
-    "everyauth": "*"
+    "mocha": "*",
+    "everyauth": ">= 0.3.0"
   }
 }
