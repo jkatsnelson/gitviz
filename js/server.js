@@ -1,6 +1,5 @@
 (function() {
-
-  var app, everyauth, express, http, path, routes;
+  var angularBridge, app, db, everyauth, express, http, path, routes;
 
   express = require('express');
 
@@ -15,6 +14,12 @@
   db = require('./db.js');
 
   app = express();
+
+  angularBridge = new (require('angular-bridge'))(app, {
+    urlPrefix: '/api/'
+  });
+
+  angularBridge.addResource('leagues', db.League);
 
   app.configure(function() {
     app.set('port', process.env.PORT || 3000);
