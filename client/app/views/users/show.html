@@ -1,0 +1,19 @@
+<div class="span4">
+  <h3>Hi {{user.name}}!</h3>
+  <p>{{user.location}}!</p>
+</div>
+<div class="span4">
+  <h3>Your commits: <br>{{stats.commits}}</h3>
+  <h3>Your forks: <br>{{stats.forks}}</h3>
+</div>
+<div class="span4">
+  <h3>Your current teams</h3>
+  <ul>
+    <li ng-repeat="team in teams">
+      <a href="#/teams/{{team.id}}">
+        The {{team.name}}
+        ID: {{team.id}}
+      </a>
+    </li>
+  </ul>
+</div>

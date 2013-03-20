@@ -1,0 +1,18 @@
+{
+  "id": "3193",
+  "name": "Beavers",
+  "players": [
+    {
+      "id": "1324",
+      "name": "Player One"
+    },
+    {
+      "id": "5678",
+      "name": "Player Two"
+    },
+    {
+      "id": "team-3193",
+      "name": "Player Three"
+    }
+  ]
+}
