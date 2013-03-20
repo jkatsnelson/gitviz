@@ -3,21 +3,14 @@ routes = require 'routes'
 http = require 'http'
 path = require 'path'
 everyauth = require 'everyauth'
-mongoose = require 'mongoose'
+db = require './db.js'
 
-mongoose.connect('mongodb://localhost/fantasygithub')
-db = mongoose.connection
-db.on 'error', console.error.bind console, 'connection error:'
-db.once 'open', () ->
-  leagueSchema = mongoose.Schema
-    name: String
-    users: Array
-  userSchema = mongoose.Schema
-    gitSN: String
-    gitInfo: Object
+angularBridge = new (require 'angular-bridge') app,
+  urlPrefix : '/api/'
+
+angularBridge.addResource 'leagues', db.League
+
 app = express()
-
-everyauth.helpExpress(app)
 
 app.configure () ->
 	app.set 'port', process.env.PORT || 3000
