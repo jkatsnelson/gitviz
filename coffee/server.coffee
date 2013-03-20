@@ -4,6 +4,8 @@ http = require 'http'
 path = require 'path'
 everyauth = require 'everyauth'
 db = require './db.js'
+# angularBridge = new (require 'angular-bridge') app,
+#   urlPrefix: '/api/'
 
 app = express()
 
