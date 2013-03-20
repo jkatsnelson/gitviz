@@ -8,6 +8,7 @@
     "flour": "*",
     "coffee-script": "*",
     "mocha": "*",
-    "everyauth": ">= 0.3.0"
+    "everyauth": ">= 0.3.0",
+    "routes": "*"
   }
 }
