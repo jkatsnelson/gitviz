@@ -10,7 +10,7 @@ app.configure () ->
 	app.set 'port', process.env.PORT || 3000
 	app.use app.router
 
-app.use("/", express.static(__dirname + '/../client/app/'))
+app.use "/", express.static __dirname + '/../client/app/'
 
   # res.render('/')
   # need something like 'res.render index'
