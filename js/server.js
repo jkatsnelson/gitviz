@@ -1,5 +1,6 @@
 (function() {
-  var app, db, everyauth, express, http, path, routes;
+
+  var app, everyauth, express, http, path, routes;
 
   express = require('express');
 
