@@ -1,0 +1,12 @@
+[
+  {
+    "name": "Dingo Banister",
+    "location": "San Francisco",
+    "id": "123-456",
+    "stats": [{
+      "commits": 2,
+      "forks": 32
+    }],
+    "snippet": "The Next, Next Generation\r\n\r\nExperience the future with Motorola XOOM with Wi-Fi, the world's first tablet powered by Android 3.0 (Honeycomb)."
+  }
+]
