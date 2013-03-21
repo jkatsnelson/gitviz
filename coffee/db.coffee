@@ -7,7 +7,7 @@ LeagueSchema = new Schema
   name: String
   teams: Array
 
-LeagueSchema.methods.get = () ->
-  console.log "Got"
+LeagueSchema.methods.get = (wat) ->
+  console.log wat
 
 exports.League = mongoose.model 'leagues', LeagueSchema
