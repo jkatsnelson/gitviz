@@ -1,5 +1,5 @@
 (function() {
-  var angularBridge, app, db, everyauth, express, http, path, routes;
+  var app, db, everyauth, express, http, path, routes;
 
   express = require('express');
 
@@ -44,17 +44,21 @@
     return res.render('index');
   });
 
+  app.get('/api/leagues/:id', function(req, res) {
+    var id;
+
+    id = req.params.id;
+    return res.json({
+      user: id,
+      data: "What!"
+    });
+  });
+
   app.listen(3000);
 
   console.log('Go to http://localhost:3000');
 
   module.exports = app;
-
-  angularBridge = new (require('angular-bridge'))(app, {
-    urlPrefix: '/api/'
-  });
-
-  angularBridge.addResource('leagues', db.League);
 
   everyauth.github.appId('2bf1c804756e95d43bec').appSecret('16516757e1d87c3f13802448685375ee04674105').findOrCreateUser(function(session, accessToken, accessTokenExtra, githubUserMetadata) {
     return console.log(githubUserMetadata);
