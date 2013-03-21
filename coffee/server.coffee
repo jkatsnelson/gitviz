@@ -32,6 +32,11 @@ app.get '/', (req, res) ->
   res.render 'layout'
 app.get '/index.html', (req, res) ->
   res.render 'index'
+app.get '/api/leagues/:id', (req, res) ->
+  id = req.params.id
+  res.json
+    user: id
+    data: "What!"
 
 app.listen 3000
 
@@ -42,10 +47,10 @@ module.exports = app
 
 # RESTful end points
 
-angularBridge = new (require 'angular-bridge') app,
-  urlPrefix: '/api/'
+# angularBridge = new (require 'angular-bridge') app,
+#   urlPrefix: '/api/'
 
-angularBridge.addResource 'leagues', db.League
+# angularBridge.addResource 'leagues', db.League
 
 # User Auth
 
