@@ -9,6 +9,7 @@
     "coffee-script": "*",
     "mocha": "*",
     "everyauth": ">= 0.3.0",
-    "routes": "*"
+    "routes": "*",
+    "ejs": "*"
   }
 }
