@@ -4,17 +4,19 @@ db = mongoose.connection
 db.on('error', console.error.bind(console, 'connection error:'));
 
 Schema = mongoose.Schema
-ObjectId = Schema.ObjectId
 
 leagueSchema = new Schema
-  name: String
-  teams: Array
+	name:
+		type: String
+		required: true
+		unique: true
+	teams: Array
 
 teamSchema = new Schema
 	name:
 		type: String
-		index:
-			unique: true
+		required: true
+		unique: true
 	players: Array
 
 playerSchema = new Schema
@@ -26,3 +28,4 @@ League = mongoose.model('League', leagueSchema)
 Player = mongoose.model('Player', playerSchema)
 
 exports.Player = Player
+exports.db = db

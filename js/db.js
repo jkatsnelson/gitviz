@@ -1,5 +1,5 @@
 (function() {
-  var League, ObjectId, Player, Schema, db, leagueSchema, mongoose, playerSchema, teamSchema;
+  var League, Player, Schema, db, leagueSchema, mongoose, playerSchema, teamSchema;
 
   mongoose = require('mongoose');
 
@@ -11,19 +11,20 @@
 
   Schema = mongoose.Schema;
 
-  ObjectId = Schema.ObjectId;
-
   leagueSchema = new Schema({
-    name: String,
+    name: {
+      type: String,
+      required: true,
+      unique: true
+    },
     teams: Array
   });
 
   teamSchema = new Schema({
     name: {
       type: String,
-      index: {
-        unique: true
-      }
+      required: true,
+      unique: true
     },
     players: Array
   });
@@ -38,5 +39,7 @@
   Player = mongoose.model('Player', playerSchema);
 
   exports.Player = Player;
+
+  exports.db = db;
 
 }).call(this);
