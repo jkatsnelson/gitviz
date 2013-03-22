@@ -24,8 +24,10 @@ playerSchema = new Schema
 	data: Object
 
 League = mongoose.model('League', leagueSchema)
-
+Team = mongoose.model('Team', teamSchema)
 Player = mongoose.model('Player', playerSchema)
 
+exports.League = League
+exports.Team = Team
 exports.Player = Player
 exports.db = db
