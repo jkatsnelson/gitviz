@@ -14,10 +14,6 @@
     teams: Array
   });
 
-  LeagueSchema.methods.get = function(wat) {
-    return console.log(wat);
-  };
-
   exports.League = mongoose.model('leagues', LeagueSchema);
 
 }).call(this);
