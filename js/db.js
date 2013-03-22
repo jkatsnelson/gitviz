@@ -31,7 +31,11 @@
   });
 
   playerSchema = new Schema({
-    name: String,
+    name: {
+      type: String,
+      required: true,
+      unique: true
+    },
     data: Object
   });
 
