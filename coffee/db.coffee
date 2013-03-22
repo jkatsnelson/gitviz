@@ -20,7 +20,10 @@ teamSchema = new Schema
 	players: Array
 
 playerSchema = new Schema
-	name: String
+	name:
+		type: String
+		required: true
+		unique: true
 	data: Object
 
 League = mongoose.model('League', leagueSchema)
