@@ -1,5 +1,5 @@
 (function() {
-  var League, ObjectId, Schema, db, leagueSchema, mongoose, playerSchema, teamSchema;
+  var League, ObjectId, Player, Schema, db, leagueSchema, mongoose, playerSchema, teamSchema;
 
   mongoose = require('mongoose');
 
@@ -29,30 +29,14 @@
   });
 
   playerSchema = new Schema({
-    name: String
+    name: String,
+    data: Object
   });
 
   League = mongoose.model('League', leagueSchema);
 
-  db.once('open', function() {
-    var ncl;
+  Player = mongoose.model('Player', playerSchema);
 
-    ncl = new League({
-      name: 'National Codeslingers League'
-    });
-    console.log(ncl.name);
-    return ncl.save(function(err) {
-      if (err) {
-        throw err;
-      }
-      console.log("saved!");
-      return League.find({}, function(err, leagues) {
-        console.log(leagues);
-        return db.close();
-      });
-    });
-  });
-
-  exports.db = db;
+  exports.Player = Player;
 
 }).call(this);
