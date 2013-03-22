@@ -4,17 +4,19 @@ db = mongoose.connection
 db.on('error', console.error.bind(console, 'connection error:'));
 
 Schema = mongoose.Schema
-ObjectId = Schema.ObjectId
 
 leagueSchema = new Schema
-  name: String
-  teams: Array
+	name:
+		type: String
+		required: true
+		unique: true
+	teams: Array
 
 teamSchema = new Schema
 	name:
 		type: String
-		index:
-			unique: true
+		required: true
+		unique: true
 	players: Array
 
 playerSchema = new Schema
@@ -26,6 +28,8 @@ League = mongoose.model('League', leagueSchema)
 #   console.log wat
 
 db.once 'open', ->
+	# Clear DB and add test data
+	League.remove({}, (err)-> console.log 'leagues cleared')
 	ncl = new League {name: 'National Codeslingers League'}
 	console.log ncl.name
 	ncl.save (err) ->
