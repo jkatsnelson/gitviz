@@ -1,5 +1,5 @@
 (function() {
-  var League, ObjectId, Schema, db, leagueSchema, mongoose, playerSchema, teamSchema;
+  var League, Schema, db, leagueSchema, mongoose, playerSchema, teamSchema;
 
   mongoose = require('mongoose');
 
@@ -11,19 +11,20 @@
 
   Schema = mongoose.Schema;
 
-  ObjectId = Schema.ObjectId;
-
   leagueSchema = new Schema({
-    name: String,
+    name: {
+      type: String,
+      required: true,
+      unique: true
+    },
     teams: Array
   });
 
   teamSchema = new Schema({
     name: {
       type: String,
-      index: {
-        unique: true
-      }
+      required: true,
+      unique: true
     },
     players: Array
   });
@@ -37,6 +38,9 @@
   db.once('open', function() {
     var ncl;
 
+    League.remove({}, function(err) {
+      return console.log('leagues cleared');
+    });
     ncl = new League({
       name: 'National Codeslingers League'
     });
