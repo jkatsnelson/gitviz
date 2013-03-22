@@ -2,6 +2,7 @@ require 'flour'
 
 task 'build:coffee', ->
     compile 'coffee/*', 'js/*'
+    compile 'github/worker.coffee', 'github/worker.js'
 
 task 'build', ->
     invoke 'build:coffee'
