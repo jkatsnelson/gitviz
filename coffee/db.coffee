@@ -19,21 +19,10 @@ teamSchema = new Schema
 
 playerSchema = new Schema
 	name: String
+	data: Object
 
 League = mongoose.model('League', leagueSchema)
 
-# LeagueSchema.methods.get = (wat) ->
-#   console.log wat
+Player = mongoose.model('Player', playerSchema)
 
-db.once 'open', ->
-	ncl = new League {name: 'National Codeslingers League'}
-	console.log ncl.name
-	ncl.save (err) ->
-		throw err if err
-		console.log "saved!"
-		League.find({}, (err,leagues) ->
-			console.log leagues
-			db.close()
-		)
-
-exports.db = db
+exports.Player = Player
