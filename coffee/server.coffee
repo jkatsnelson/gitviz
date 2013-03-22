@@ -43,12 +43,3 @@ app.listen 3000
 console.log 'Go to http://localhost:3000'
 
 module.exports = app
-
-# User Auth
-
-everyauth.github
-  .appId('2bf1c804756e95d43bec')
-  .appSecret('16516757e1d87c3f13802448685375ee04674105')
-  .findOrCreateUser((session, accessToken, accessTokenExtra, githubUserMetadata) ->
-    console.log githubUserMetadata
-  ).redirectPath "/"

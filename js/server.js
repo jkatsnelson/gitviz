@@ -60,8 +60,4 @@
 
   module.exports = app;
 
-  everyauth.github.appId('2bf1c804756e95d43bec').appSecret('16516757e1d87c3f13802448685375ee04674105').findOrCreateUser(function(session, accessToken, accessTokenExtra, githubUserMetadata) {
-    return console.log(githubUserMetadata);
-  }).redirectPath("/");
-
 }).call(this);
