@@ -44,14 +44,6 @@ console.log 'Go to http://localhost:3000'
 
 module.exports = app
 
-
-# RESTful end points
-
-# angularBridge = new (require 'angular-bridge') app,
-#   urlPrefix: '/api/'
-
-# angularBridge.addResource 'leagues', db.League
-
 # User Auth
 
 everyauth.github
