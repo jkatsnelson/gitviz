@@ -1,17 +1,22 @@
 (function() {
-  var GitHubApi, github;
+  var GitHubApi, db, github;
 
   GitHubApi = require('github');
+
+  db = require('js/db.js');
 
   github = new GitHubApi({
     version: '3.0.0',
     timeout: 5000
   });
 
-  github.user.getFollowingFromUser({
-    user: 'mikedeboer'
-  }, function(err, res) {
-    return console.log(JSON.stringify(res));
+  db.once('open', function() {
+    console.log("WAHAT UP");
+    return github.user.getFollowingFromUser({
+      user: 'mikedeboer'
+    }, function(err, res) {
+      return console.log(JSON.stringify(res));
+    });
   });
 
 }).call(this);
