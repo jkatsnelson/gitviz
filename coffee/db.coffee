@@ -27,6 +27,14 @@ playerSchema = new Schema
 		unique: true
 	data: Object
 
+repoSchema = new Schema
+	name: String
+	commits: Array
+	follows: Array
+	stars: Array
+	pulls: Array
+	forks: Array
+
 League = mongoose.model('League', leagueSchema)
 Team = mongoose.model('Team', teamSchema)
 Player = mongoose.model('Player', playerSchema)
