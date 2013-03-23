@@ -38,7 +38,9 @@ repoSchema = new Schema
 League = mongoose.model('League', leagueSchema)
 Team = mongoose.model('Team', teamSchema)
 Player = mongoose.model('Player', playerSchema)
+Repo = mongoose.model('Repo', repoSchema)
 
+exports.Repo = Repo
 exports.League = League
 exports.Team = Team
 exports.Player = Player
