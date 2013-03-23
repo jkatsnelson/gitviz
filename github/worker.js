@@ -13,25 +13,13 @@
   });
 
   github.repos.getCommits({
-    user: 'jashkenas',
-    repo: 'coffee-script'
+    user: 'gavinmcdermott',
+    repo: 'rooms'
   }, function(err, res) {
-    var repo;
-
     if (err) {
       throw err;
     }
-    console.log(typeof res.meta.link);
-    repo = new Repo({
-      name: 'coffee-script',
-      commits: res
-    });
-    return repo.save(function(err) {
-      console.log("saved");
-      if (err) {
-        throw err;
-      }
-    });
+    return console.log(res);
   });
 
 }).call(this);

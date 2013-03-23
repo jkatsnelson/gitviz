@@ -7,14 +7,14 @@ github = new GitHubApi
 	timeout: 5000
 
 github.repos.getCommits
-  user: 'jashkenas'
-  repo: 'coffee-script'
+  user: 'gavinmcdermott'
+  repo: 'rooms'
 , (err, res) ->
   throw err if err
-  console.log typeof res.meta.link
-  repo = new Repo
-    name: 'coffee-script'
-    commits: res
-  repo.save (err) ->
-    console.log "saved"
-    throw err if err
+  console.log res
+  # repo = new Repo
+  #   name: 'coffee-script'
+  #   commits: res
+  # repo.save (err) ->
+  #   console.log "saved"
+  #   throw err if err
