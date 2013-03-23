@@ -1,5 +1,5 @@
 (function() {
-  var League, Player, Schema, Team, db, leagueSchema, mongoose, playerSchema, repoSchema, teamSchema;
+  var League, Player, Repo, Schema, Team, db, leagueSchema, mongoose, playerSchema, repoSchema, teamSchema;
 
   mongoose = require('mongoose');
 
@@ -52,6 +52,10 @@
   Team = mongoose.model('Team', teamSchema);
 
   Player = mongoose.model('Player', playerSchema);
+
+  Repo = mongoose.model('Repo', repoSchema);
+
+  exports.Repo = Repo;
 
   exports.League = League;
 
