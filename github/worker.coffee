@@ -3,8 +3,8 @@ db = require '../js/db.js'
 Player = db.Player
 
 github = new GitHubApi
-  version: '3.0.0',
-  timeout: 5000
+	version: '3.0.0',
+	timeout: 5000
 
 # github.repos.getContributors
 #   user: 'jashkenas'
