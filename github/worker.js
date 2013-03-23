@@ -16,7 +16,17 @@
     user: 'jashkenas',
     repo: 'coffee-script'
   }, function(err, res) {
-    return console.log(res);
+    var repo;
+
+    repo = new Repo({
+      name: 'coffee-script',
+      commits: res
+    });
+    return repo.save(function(err) {
+      if (err) {
+        throw err;
+      }
+    });
   });
 
 }).call(this);
