@@ -16,7 +16,8 @@ github = new GitHubApi
 #   player.save (err) ->
 #     throw err if err
 
-github.events.getFromUser
+github.repos.getCommits
   user: 'jashkenas'
+  repo: 'coffee-script'
 , (err, res) ->
   console.log res

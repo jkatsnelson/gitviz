@@ -12,8 +12,9 @@
     timeout: 5000
   });
 
-  github.events.getFromUser({
-    user: 'jashkenas'
+  github.repos.getCommits({
+    user: 'jashkenas',
+    repo: 'coffee-script'
   }, function(err, res) {
     return console.log(res);
   });
