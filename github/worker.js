@@ -12,21 +12,10 @@
     timeout: 5000
   });
 
-  github.repos.getContributors({
-    user: 'jashkenas',
-    repo: 'coffee-script'
+  github.events.getFromUser({
+    user: 'jashkenas'
   }, function(err, res) {
-    var player;
-
-    player = new Player({
-      name: res[0].login,
-      data: res[0]
-    });
-    return player.save(function(err) {
-      if (err) {
-        throw err;
-      }
-    });
+    return console.log(res);
   });
 
 }).call(this);
