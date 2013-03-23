@@ -1,5 +1,5 @@
 (function() {
-  var League, Player, Schema, Team, db, leagueSchema, mongoose, playerSchema, teamSchema;
+  var League, Player, Schema, Team, db, leagueSchema, mongoose, playerSchema, repoSchema, teamSchema;
 
   mongoose = require('mongoose');
 
@@ -36,6 +36,15 @@
       unique: true
     },
     data: Object
+  });
+
+  repoSchema = new Schema({
+    name: String,
+    commits: Array,
+    follows: Array,
+    stars: Array,
+    pulls: Array,
+    forks: Array
   });
 
   League = mongoose.model('League', leagueSchema);
