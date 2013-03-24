@@ -6,42 +6,14 @@ db.on('error', console.error.bind(console, 'connection error:'));
 
 Schema = mongoose.Schema
 
-leagueSchema = new Schema
-	name:
-		type: String
-		required: true
-		unique: true
-	teams: Array
+commitSchema = new Schema
+	repo: String
+	location: String
+	contributor: Object
+	message: String
+	Date: Date
 
-teamSchema = new Schema
-	name:
-		type: String
-		required: true
-		unique: true
-	players: Array
+Commit = mongoose.model 'Commit', commitSchema
 
-playerSchema = new Schema
-	name:
-		type: String
-		required: true
-		unique: true
-	data: Object
-
-repoSchema = new Schema
-	name: String
-	commits: Array
-	follows: Array
-	stars: Array
-	pulls: Array
-	forks: Array
-
-League = mongoose.model('League', leagueSchema)
-Team = mongoose.model('Team', teamSchema)
-Player = mongoose.model('Player', playerSchema)
-Repo = mongoose.model('Repo', repoSchema)
-
-exports.Repo = Repo
-exports.League = League
-exports.Team = Team
-exports.Player = Player
+exports.Commit = Commit
 exports.db = db
