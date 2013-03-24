@@ -11,6 +11,7 @@
     "coffee-script": "*",
     "mocha": "*",
     "routes": "*",
-    "ejs": "*"
+    "ejs": "*",
+    "request": "*"
   }
 }
