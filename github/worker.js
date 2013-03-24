@@ -7,9 +7,9 @@
 
   Repo = db.Repo;
 
-  repoName = 'deface-meteor';
+  repoName = 'coffee-script';
 
-  author = 'jkatsnelson';
+  author = 'jashkenas';
 
   auth = '?client_id=2bf1c804756e95d43bec&client_secret=16516757e1d87c3f13802448685375ee04674105';
 
@@ -18,9 +18,8 @@
   pageNum = 0;
 
   getLinkedList = function(url) {
-    var repo, res;
+    var repo;
 
-    res = null;
     pageNum++;
     repo = new Repo({
       repo: repoName,
@@ -39,10 +38,13 @@
           throw err;
         }
         if (res.headers.link) {
-          console.log(pageNum);
-          nextLink = res.headers.link.split("<")[1].split(">")[0];
-          console.log(nextLink);
-          return getLinkedList(nextLink);
+          if (res.headers.link.split(";").length > 2) {
+            console.log(pageNum);
+            nextLink = res.headers.link.split("<")[1].split(">")[0];
+            return getLinkedList(nextLink);
+          } else {
+            throw "List ended. Done saving. Last doc pageNum is " + pageNum;
+          }
         } else {
           throw "Done saving, last doc pageNum is " + pageNum;
         }
