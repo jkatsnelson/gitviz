@@ -1,5 +1,5 @@
 (function() {
-  var Commit, auth, author, db, getCommits, repoName, repoURL, request, saveToDB;
+  var Commit, auth, author, db, fetchLocation, getCommits, locations, repoName, repoURL, request, saveCommit, traverseList, userURL;
 
   request = require('request');
 
@@ -7,13 +7,17 @@
 
   Commit = db.Commit;
 
-  repoName = 'deface-meteor';
+  repoName = 'coffee-script';
 
-  author = 'jkatsnelson';
+  author = 'jashkenas';
 
   auth = '?client_id=2bf1c804756e95d43bec&client_secret=16516757e1d87c3f13802448685375ee04674105';
 
-  repoURL = 'https://api.github.com/repos/' + author + '/' + repoName + '/commitList';
+  repoURL = 'https://api.github.com/repos/' + author + '/' + repoName + '/commits';
+
+  userURL = 'https://api.github.com/users/';
+
+  locations = {};
 
   getCommits = function(url) {
     return request.get(url, function(err, res, body) {
@@ -23,37 +27,39 @@
         throw err;
       }
       commitList = JSON.parse(body);
-      console.log(res);
       if (!res.headers.link) {
         console.log("Commit list is only one page long.");
-        return saveToDB(commitList);
+        return traverseList(commitList);
       }
       if (res.headers.link.split(";").length > 2) {
-        return saveToDB(commitList, res.headers.link.split("<")[1].split(">")[0]);
+        return traverseList(commitList, res.headers.link.split("<")[1].split(">")[0]);
       } else {
-        saveToDB(commitList);
-        return console.log("List ended.");
+        return traverseList(commitList && console.log("List ended."));
       }
     });
   };
 
-  saveToDB = function(commitList, nextPage) {
-    var commit, commitObject;
+  traverseList = function(commitList, nextPage) {
+    var contributor;
 
+    if (!nextPage) {
+      nextPage = null;
+    }
+    if (!commitList) {
+      commitList = [];
+    }
     if (commitList.length) {
-      commitObject = commitList.pop();
-      commit = new Commit({
-        repo: author + '/' + repoName,
-        contributor: commitObject.author,
-        message: commitObject.commit.message,
-        date: commitObject.author.date
-      });
-      return commit.save(function(err) {
-        if (err) {
-          throw err;
-        }
-        return saveToDB(commitList);
-      });
+      if (!commitList[0].author) {
+        commitList[0].author = {
+          login: 'not specified'
+        };
+      }
+      contributor = commitList[0].author.login;
+      if (locations[contributor]) {
+        return saveCommit(commitList.shift(), commitList, nextPage);
+      } else {
+        return fetchLocation(contributor, commitList, nextPage);
+      }
     } else {
       if (nextPage) {
         return getCommits(nextPage);
@@ -61,6 +67,40 @@
         return console.log('done saving.');
       }
     }
+  };
+
+  fetchLocation = function(contributor, commitList, nextPage) {
+    return request.get(userURL + contributor + auth, function(err, res, body) {
+      var user;
+
+      if (err) {
+        throw err;
+      }
+      user = JSON.parse(body);
+      if (!user.location) {
+        user.location = "Not specified";
+      }
+      locations[contributor] = user.location;
+      return traverseList(commitList, nextPage);
+    });
+  };
+
+  saveCommit = function(commit, commitList, nextPage) {
+    var newCommit;
+
+    newCommit = new Commit({
+      repo: author + '/' + repoName,
+      contributor: commit.author.login,
+      message: commit.commit.message,
+      date: commit.commit.author.date,
+      location: locations[commit.author.login]
+    });
+    return newCommit.save(function(err) {
+      if (err) {
+        throw err;
+      }
+      return traverseList(commitList, nextPage);
+    });
   };
 
   getCommits(repoURL + auth);
