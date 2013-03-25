@@ -4,7 +4,7 @@ task 'build:coffee', ->
   compile 'coffee/*', 'js/*'
 
 task 'build:github', ->
-  compile 'github/worker.coffee', 'github/worker.js'
+  compile 'github/*.coffee', 'github/'
 task 'build', ->
   invoke 'build:coffee'
 
