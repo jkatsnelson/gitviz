@@ -8,7 +8,7 @@ Schema = mongoose.Schema
 
 commitSchema = new Schema
 	repo: String
-	location: String
+	location: Object
 	contributor: Object
 	message: String
 	date: Date

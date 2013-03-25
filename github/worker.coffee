@@ -1,5 +1,8 @@
 request = require 'request'
 db = require '../js/db.js'
+gm = require("googlemaps")
+util = require("util")
+fs = require("fs")
 
 Commit = db.Commit
 
@@ -43,8 +46,18 @@ fetchLocation = (contributor, commitList, nextPage) ->
     user = JSON.parse body
     unless user.location
       user.location = "Not specified"
-    locations[contributor] = user.location
-    traverseList commitList, nextPage
+    # get lat long for google maps
+    gm.geocode user.location, (err, data) ->
+      throw err if err
+      if data.status is "OK"
+        locations[contributor] =
+          userInput: user.location
+          city: data.results[0].formatted_address
+          lat: data.results[0].geometry.location.lat
+          lon: data.results[0].geometry.location.lng
+      else locations[contributor] = city: user.location
+      console.log locations[contributor]
+      traverseList commitList, nextPage
 
 saveCommit = (commit, commitList, nextPage) ->
   newCommit = new Commit

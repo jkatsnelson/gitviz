@@ -1,9 +1,15 @@
 (function() {
-  var Commit, auth, author, db, fetchLocation, getCommits, locations, repoName, repoURL, request, saveCommit, traverseList, userURL;
+  var Commit, auth, author, db, fetchLocation, fs, getCommits, gm, locations, repoName, repoURL, request, saveCommit, traverseList, userURL, util;
 
   request = require('request');
 
   db = require('../js/db.js');
+
+  gm = require("googlemaps");
+
+  util = require("util");
+
+  fs = require("fs");
 
   Commit = db.Commit;
 
@@ -80,8 +86,25 @@
       if (!user.location) {
         user.location = "Not specified";
       }
-      locations[contributor] = user.location;
-      return traverseList(commitList, nextPage);
+      return gm.geocode(user.location, function(err, data) {
+        if (err) {
+          throw err;
+        }
+        if (data.status === "OK") {
+          locations[contributor] = {
+            userInput: user.location,
+            city: data.results[0].formatted_address,
+            lat: data.results[0].geometry.location.lat,
+            lon: data.results[0].geometry.location.lng
+          };
+        } else {
+          locations[contributor] = {
+            city: user.location
+          };
+        }
+        console.log(locations[contributor]);
+        return traverseList(commitList, nextPage);
+      });
     });
   };
 
