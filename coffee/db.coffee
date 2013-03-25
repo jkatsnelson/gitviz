@@ -11,7 +11,7 @@ commitSchema = new Schema
 	location: String
 	contributor: Object
 	message: String
-	Date: Date
+	date: Date
 
 Commit = mongoose.model 'Commit', commitSchema
 

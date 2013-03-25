@@ -3,37 +3,58 @@ db = require '../js/db.js'
 
 Commit = db.Commit
 
-repoName = 'deface-meteor'
-author = 'jkatsnelson'
+repoName = 'coffee-script'
+author = 'jashkenas'
 auth = '?client_id=2bf1c804756e95d43bec&client_secret=16516757e1d87c3f13802448685375ee04674105'
-repoURL = 'https://api.github.com/repos/'+author+'/'+repoName+'/commitList'
+repoURL = 'https://api.github.com/repos/'+author+'/'+repoName+'/commits'
+userURL = 'https://api.github.com/users/'
+locations = {}
 
 getCommits = (url) ->
   request.get url, (err, res, body) ->
     throw err if err  
     commitList = JSON.parse body
-    console.log res
     unless res.headers.link
       console.log "Commit list is only one page long."
-      return saveToDB commitList
+      return traverseList commitList
     if res.headers.link.split(";").length > 2
-      # move to next page of the commit list
-      saveToDB commitList, res.headers.link.split("<")[1].split(">")[0]
+      # if there is a next page, move to next page of the commit list
+      traverseList commitList, res.headers.link.split("<")[1].split(">")[0]
     else
-      saveToDB commitList
-      console.log "List ended."
-saveToDB = (commitList, nextPage) ->
+      traverseList commitList && console.log "List ended."
+
+traverseList = (commitList, nextPage) ->
+  unless nextPage
+    nextPage = null
+  unless commitList
+    commitList = []
   if commitList.length
-    commitObject = commitList.pop()
-    commit = new Commit
-      repo: author + '/' + repoName
-      contributor: commitObject.author
-      message: commitObject.commit.message
-      date: commitObject.author.date
-    commit.save (err) ->
-      throw err if err
-      saveToDB commitList
+    unless commitList[0].author
+      commitList[0].author = login: 'not specified'
+    contributor = commitList[0].author.login
+    if locations[contributor] then saveCommit commitList.shift(), commitList, nextPage
+    else fetchLocation contributor, commitList, nextPage
   else
     if nextPage then getCommits nextPage else console.log 'done saving.'
+
+fetchLocation = (contributor, commitList, nextPage) ->
+  request.get userURL + contributor + auth, (err, res, body) ->
+    throw err if err
+    user = JSON.parse body
+    unless user.location
+      user.location = "Not specified"
+    locations[contributor] = user.location
+    traverseList commitList, nextPage
+
+saveCommit = (commit, commitList, nextPage) ->
+  newCommit = new Commit
+    repo: author + '/' + repoName
+    contributor: commit.author.login
+    message: commit.commit.message
+    date: commit.commit.author.date
+    location : locations[commit.author.login]
+  newCommit.save (err) ->
+    throw err if err
+    traverseList commitList, nextPage
 
 getCommits(repoURL+auth)
