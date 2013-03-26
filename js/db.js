@@ -1,5 +1,5 @@
 (function() {
-  var Commit, Schema, commitSchema, db, mongoose;
+  var Commit, RepoEvent, Schema, UserEvent, commitSchema, db, mongoose, repoEventSchema, userEventSchema;
 
   mongoose = require('mongoose');
 
@@ -20,6 +20,24 @@
   });
 
   Commit = mongoose.model('Commit', commitSchema);
+
+  userEventSchema = new Schema({
+    user: String,
+    event: Object
+  });
+
+  UserEvent = mongoose.model('UserEvent', userEventSchema);
+
+  repoEventSchema = new Schema({
+    repo: String,
+    event: Object
+  });
+
+  RepoEvent = mongoose.model('RepoEvent', repoEventSchema);
+
+  exports.UserEvent = UserEvent;
+
+  exports.RepoEvent = RepoEvent;
 
   exports.Commit = Commit;
 
