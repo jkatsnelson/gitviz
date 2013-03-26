@@ -2,7 +2,6 @@ express = require 'express'
 routes = require 'routes'
 http = require 'http'
 path = require 'path'
-
 # App config
 
 app = express()
@@ -23,5 +22,8 @@ app.configure () ->
 app.listen 3000
 
 console.log 'Go to http://localhost:3000'
+
+app.get 'query/:user', (req, res) ->
+  eventEmitter
 
 module.exports = app

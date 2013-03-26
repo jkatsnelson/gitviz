@@ -29,6 +29,10 @@
 
   console.log('Go to http://localhost:3000');
 
+  app.get('query/:user', function(req, res) {
+    return eventEmitter;
+  });
+
   module.exports = app;
 
 }).call(this);
