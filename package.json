@@ -12,6 +12,7 @@
     "mocha": "*",
     "routes": "*",
     "ejs": "*",
-    "request": "*"
+    "request": "*",
+    "http-link": "*"
   }
 }
