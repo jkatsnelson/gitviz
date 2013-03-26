@@ -4,9 +4,11 @@ task 'build:coffee', ->
   compile 'coffee/*', 'js/*'
 
 task 'build:github', ->
-  compile 'github/*.coffee', 'github/'
+  compile 'github/coffee/*', 'github/js/*'
+
 task 'build', ->
   invoke 'build:coffee'
+  invoke 'build:github'
 
 task 'watch', ->
   invoke 'build:coffee'
