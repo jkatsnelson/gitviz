@@ -9,7 +9,7 @@
 
   path = require('path');
 
-  github = require('/github/js/userEvents.js');
+  github = require(__dirname + '/../../github/js/userEvents.js');
 
   app = express();
 
@@ -27,16 +27,21 @@
     return app.use(express.logger());
   });
 
-  app.listen(3000);
-
   console.log('Go to http://localhost:3000');
 
-  app.get('query/:user', function(req, res, user) {
-    github.query(user);
-    return github.on('retrieved', function(data) {
-      return res.send(data);
-    });
+  app.get('/wat', function(req, res) {
+    console.log('wat');
+    return res.send('wat');
   });
+
+  app.get('/query/:user', function(req, res) {
+    debugger;    github.getEvents().on('events', function(events) {
+      return res.send(events);
+    });
+    return github.getEvents(req.params.user);
+  });
+
+  app.listen(3000);
 
   module.exports = app;
 
