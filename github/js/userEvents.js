@@ -1,5 +1,5 @@
 (function() {
-  var UserEvent, auth, db, eventsURL, getEvents, httpLink, nextPage, num, request, rootURL, saveEvent, traverseList, user, _;
+  var UserEvent, auth, db, eventsURL, getEventsAndReturn, getEventsAndSave, httpLink, nextPage, query, request, rootURL, saveEvent, traverseList, user, _;
 
   request = require('request');
 
@@ -19,11 +19,23 @@
 
   auth = '?client_id=2bf1c804756e95d43bec&client_secret=16516757e1d87c3f13802448685375ee04674105';
 
-  num = 0;
-
   nextPage = null;
 
-  getEvents = function(url) {
+  query = function(user) {
+    user = user;
+    getEventsAndReturn(rootURL + user + eventsURL + auth);
+    return getEventsAndSave(rootURL + user + eventsURL + auth);
+  };
+
+  getEventsAndReturn = function(url) {
+    if (url) {
+
+    } else {
+      return console.log("done");
+    }
+  };
+
+  getEventsAndSave = function(url) {
     if (url) {
       return request.get(url, function(err, res, body) {
         var eventList, links;
@@ -47,8 +59,6 @@
           return traverseList(eventList);
         }
       });
-    } else {
-      throw console.error("done");
     }
   };
 
@@ -56,14 +66,13 @@
     if (list.length) {
       return saveEvent(list.shift(), list, nextPage);
     } else {
-      return getEvents(nextPage);
+      return getEventsAndSave(nextPage);
     }
   };
 
   saveEvent = function(listItem, list) {
     var userEvent;
 
-    num++;
     userEvent = new UserEvent({
       user: user,
       event: listItem
@@ -72,11 +81,10 @@
       if (err) {
         throw err;
       }
-      console.log("went into save loop " + num);
       return traverseList(list);
     });
   };
 
-  getEvents(rootURL + user + eventsURL + auth);
+  getEventsAndSave(rootURL + user + eventsURL + auth);
 
 }).call(this);
