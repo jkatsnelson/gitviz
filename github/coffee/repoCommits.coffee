@@ -1,5 +1,5 @@
 request = require 'request'
-db = require '../../js/db.js'
+db = require __dirname + '/../../server/js/db.js'
 gm = require("googlemaps")
 util = require("util")
 fs = require("fs")
@@ -62,8 +62,6 @@ fetchLocation = (contributor, commitList) ->
       traverseList commitList
 
 saveCommit = (commit, commitList) ->
-  save++
-  console.log save
   newCommit = new Commit
     repo: author + '/' + repoName
     contributor: commit.author.login
@@ -74,4 +72,4 @@ saveCommit = (commit, commitList) ->
     throw err if err
     traverseList commitList
 
-getCommits(repoURL+auth)
+getCommits repoURL+auth

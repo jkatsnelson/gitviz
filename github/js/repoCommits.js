@@ -3,7 +3,7 @@
 
   request = require('request');
 
-  db = require('../../js/db.js');
+  db = require(__dirname + '/../../server/js/db.js');
 
   gm = require("googlemaps");
 
@@ -121,8 +121,6 @@
   saveCommit = function(commit, commitList) {
     var newCommit;
 
-    save++;
-    console.log(save);
     newCommit = new Commit({
       repo: author + '/' + repoName,
       contributor: commit.author.login,

@@ -1,5 +1,5 @@
 (function() {
-  var app, express, http, path, routes;
+  var app, express, github, http, path, routes;
 
   express = require('express');
 
@@ -8,6 +8,8 @@
   http = require('http');
 
   path = require('path');
+
+  github = require('/github/js/userEvents.js');
 
   app = express();
 
@@ -29,8 +31,11 @@
 
   console.log('Go to http://localhost:3000');
 
-  app.get('query/:user', function(req, res) {
-    return eventEmitter;
+  app.get('query/:user', function(req, res, user) {
+    github.query(user);
+    return github.on('retrieved', function(data) {
+      return res.send(data);
+    });
   });
 
   module.exports = app;

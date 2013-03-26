@@ -2,8 +2,7 @@ express = require 'express'
 routes = require 'routes'
 http = require 'http'
 path = require 'path'
-# App config
-
+github = require '/github/js/userEvents.js'
 app = express()
 
 app.configure () ->
@@ -23,7 +22,9 @@ app.listen 3000
 
 console.log 'Go to http://localhost:3000'
 
-app.get 'query/:user', (req, res) ->
-  eventEmitter
+app.get 'query/:user', (req, res, user) ->
+  github.query user
+  github.on 'retrieved', (data) ->
+    res.send data
 
 module.exports = app
