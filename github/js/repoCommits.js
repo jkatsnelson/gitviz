@@ -1,5 +1,5 @@
 (function() {
-  var Commit, auth, author, db, fetchLocation, fs, getCommits, gm, httpLink, locations, nextPage, repoName, repoURL, request, save, saveCommit, traverseList, userURL, util, _;
+  var Commit, auth, author, db, fetchLocation, fs, getCommits, gm, httpLink, locations, nextPage, repoName, repoURL, request, saveCommit, traverseList, userURL, util, _;
 
   request = require('request');
 
@@ -31,8 +31,6 @@
 
   nextPage = null;
 
-  save = 0;
-
   getCommits = function(url) {
     if (url) {
       return request.get(url, function(err, res, body) {
@@ -57,7 +55,7 @@
         return traverseList(commitList);
       });
     } else {
-      throw console.error("done");
+      return db.db.close();
     }
   };
 
@@ -80,7 +78,7 @@
       if (nextPage) {
         return getCommits(nextPage);
       } else {
-        return console.log('done saving.');
+        return db.db.close();
       }
     }
   };

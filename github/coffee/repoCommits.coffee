@@ -15,7 +15,6 @@ repoURL = 'https://api.github.com/repos/'+author+'/'+repoName+'/commits'
 userURL = 'https://api.github.com/users/'
 locations = {}
 nextPage = null
-save = 0
 
 getCommits = (url) ->
   if url
@@ -30,7 +29,7 @@ getCommits = (url) ->
         if link.rel is 'next' then nextPage = link.href
         else return
       traverseList commitList
-  else throw console.error "done"
+  else db.db.close()
 
 traverseList = (commitList) ->
   if commitList.length
@@ -40,7 +39,7 @@ traverseList = (commitList) ->
     if locations[contributor] then saveCommit commitList.shift(), commitList
     else fetchLocation contributor, commitList
   else
-    if nextPage then getCommits nextPage else console.log 'done saving.'
+    if nextPage then getCommits nextPage else db.db.close()
 
 fetchLocation = (contributor, commitList) ->
   request.get userURL + contributor + auth, (err, res, body) ->

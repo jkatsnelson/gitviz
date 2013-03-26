@@ -3,7 +3,6 @@ mongoose.connect 'mongodb://octocat:1@ds043027.mongolab.com:43027/fantasygithub'
 
 db = mongoose.connection
 db.on('error', console.error.bind(console, 'connection error:'));
-
 Schema = mongoose.Schema
 
 commitSchema = new Schema

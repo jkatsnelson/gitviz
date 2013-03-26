@@ -1,13 +1,17 @@
 (function() {
-  var UserEvent, auth, db, eventsURL, getEventsAndReturn, getEventsAndSave, httpLink, nextPage, query, request, rootURL, saveEvent, traverseList, user, _;
+  var EventEmitter, UserEvent, auth, db, events, eventsURL, getEvents, httpLink, nextPage, request, rootURL, saveEvents, user, util, _;
 
   request = require('request');
 
-  db = require('../../js/db.js');
+  db = require(__dirname + '/../../server/js/db.js');
 
   _ = require('underscore');
 
   httpLink = require('http-link');
+
+  EventEmitter = require('events').EventEmitter;
+
+  util = require('util');
 
   UserEvent = db.UserEvent;
 
@@ -21,70 +25,55 @@
 
   nextPage = null;
 
-  query = function(user) {
-    user = user;
-    getEventsAndReturn(rootURL + user + eventsURL + auth);
-    return getEventsAndSave(rootURL + user + eventsURL + auth);
-  };
+  events = [];
 
-  getEventsAndReturn = function(url) {
-    if (url) {
+  getEvents = function(user) {
+    var that, url;
 
-    } else {
-      return console.log("done");
-    }
-  };
+    that = this;
+    url = rootURL + user + eventsURL + auth;
+    return request.get(url, function(err, res, body) {
+      var links;
 
-  getEventsAndSave = function(url) {
-    if (url) {
-      return request.get(url, function(err, res, body) {
-        var eventList, links;
-
-        if (err) {
-          throw err;
-        }
-        links = httpLink.parse(res.headers.link);
-        eventList = JSON.parse(body);
-        nextPage = null;
-        _.each(links, function(link) {
-          if (link.rel === 'next') {
-            return nextPage = link.href;
-          } else {
-
-          }
-        });
-        if (nextPage) {
-          return traverseList(eventList, nextPage);
+      if (err) {
+        throw err;
+      }
+      links = httpLink.parse(res.headers.link);
+      events = events.concat(JSON.parse(body));
+      nextPage = null;
+      _.each(links, function(link) {
+        if (link.rel === 'next') {
+          return nextPage = link.href;
         } else {
-          return traverseList(eventList);
+
         }
       });
-    }
+      if (nextPage) {
+        return getEvents(nextPage);
+      } else {
+        that.emit('events', events);
+        return saveEvents(events);
+      }
+    });
   };
 
-  traverseList = function(list) {
-    if (list.length) {
-      return saveEvent(list.shift(), list, nextPage);
-    } else {
-      return getEventsAndSave(nextPage);
-    }
-  };
+  util.inherits(getEvents, EventEmitter);
 
-  saveEvent = function(listItem, list) {
+  saveEvents = function(events) {
     var userEvent;
 
     userEvent = new UserEvent({
       user: user,
-      event: listItem
+      event: events
     });
     return userEvent.save(function(err) {
       if (err) {
         throw err;
       }
-      return traverseList(list);
+      return db.db.close();
     });
   };
 
-  getEventsAndSave(rootURL + user + eventsURL + auth);
+  exports.getEvents = getEvents;
 
 }).call(this);

@@ -2,7 +2,7 @@ express = require 'express'
 routes = require 'routes'
 http = require 'http'
 path = require 'path'
-github = require '/github/js/userEvents.js'
+github = require __dirname + '/../../github/js/userEvents.js'
 app = express()
 
 app.configure () ->
@@ -18,13 +18,18 @@ app.configure () ->
   app.use express.static path.join app.pwd, '/app/'
   app.use express.logger()
 
-app.listen 3000
-
 console.log 'Go to http://localhost:3000'
 
-app.get 'query/:user', (req, res, user) ->
-  github.query user
-  github.on 'retrieved', (data) ->
-    res.send data
+app.get '/wat', (req, res) ->
+  console.log 'wat'
+  res.send 'wat'
+
+app.get '/query/:user', (req, res) ->
+  debugger
+  github.getEvents().on 'events', (events) ->
+    res.send events
+  github.getEvents req.params.user
+
+app.listen 3000
 
 module.exports = app
