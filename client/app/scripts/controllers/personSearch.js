@@ -23,12 +23,25 @@ angular.module('githubleagueClientApp')
       }
     ];
 
+    var createDateTypeObjects = function(gitEvents) {
+      var dtObjs = _(gitEvents).map(function(e) { return { "creation": e.created_at, "type": e.type } });
+      _(dtObjs).each(function(obj) {
+        var timeStamp = Date.parse(obj.creation);
+        var newTime = new Date(timeStamp);
+        if (newTime.getUTCHours() >= 6 && newTime.getUTCHours() <= 17) {
+          obj['persona'] = 'dayTripper';
+        } else {
+          obj['persona'] = 'nightOwl';
+        }
+      });
+      return dtObjs;
+    };
+
     $scope.searchForUser = function(gitUser) {
       $http({method: 'GET', url: '/query/'+ gitUser }).
         success(function(data, status, headers, config) {
           console.log(gitUser);
-          // console.log(data);
-          $scope.events = data;
+          $scope.events = createDateTypeObjects(data);
           $scope.personReady = true;
         }).
         error(function(data, status, headers, config) {
