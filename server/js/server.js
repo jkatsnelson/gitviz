@@ -38,7 +38,7 @@
     return events.find.get(req.params.user);
   });
 
-  app.get('query/:user/:repo', function(req, res) {
+  app.get('/query/:user/repo/:repo', function(req, res) {
     commits.find.on('commits', function(commits) {
       return res.send(commits);
     });
