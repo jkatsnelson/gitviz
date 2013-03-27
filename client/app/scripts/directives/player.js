@@ -12,7 +12,6 @@ angular.module('githubleagueClientApp')
 
         var bChart,
             gitData = scope.events;
-            console.log('gitData');
 
         $('.playerChart').on('click', function(event) {
           var viewType = event.target.className;
@@ -27,15 +26,15 @@ angular.module('githubleagueClientApp')
         function bubbleChart(data) {
           this.data = data;
           var uniqueEventList = _.unique( _.pluck(data, 'type') );
-          var eventCounts = _(data).each(function(event) {
-            var counter = {};
-            if (!counter[event.type]) {
-              counter[event.type] = 1;
-            } else {
-              counter[event.type]++
-            }
-          });
-          this.width = $(".hero-unit").width();
+          // var eventCounts = _(data).each(function(event) {
+          //   var counter = {};
+          //   if (!counter[event.type]) {
+          //     counter[event.type] = 1;
+          //   } else {
+          //     counter[event.type]++
+          //   }
+          // });
+          this.width = $(".container").width();
           this.height = 600;
           this.center = {
             x: this.width / 2,
