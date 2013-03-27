@@ -10,90 +10,87 @@ angular.module('githubleagueClientApp')
       restrict: 'E',
       link: function postLink(scope, element, attrs) {
 
-        // console.log(scope.data);
-
-        var bc;
+        var bChart,
+            gitData = scope.events;
 
         $('.playerChart').on('click', function(event) {
           var viewType = event.target.className;
           if (viewType === 'showGroup') {
-            var renderChart = function(csv) {
-              bc.display_group_all();
-              return bc;
-            };
-            d3.json("../geodata/fakeuser.json", renderChart)
+              bChart.display_group_all();
           }
           if (viewType === 'showSeparate') {
-            console.log(bc);
-            var renderChart = function(csv) {
-              bc.displayByAttribute();
-              return bc;
-            };
-            d3.json("../geodata/fakeuser.json", renderChart)
+            bChart.displayByAttribute();
           }
         });
 
         function bubbleChart(data) {
-          var max_amount;
           this.data = data;
+          var uniqueEventList = _.unique( _.pluck(data, 'type') );
+          var eventCounts = _(data).each(function(event) {
+            var counter = {};
+            if (!counter[event.type]) {
+              counter[event.type] = 1;
+            } else {
+              counter[event.type]++
+            }
+          });
           this.width = $(".hero-unit").width();
           this.height = 600;
-          // this.tooltip = CustomTooltip("gates_tooltip", 240);
           this.center = {
             x: this.width / 2,
             y: this.height / 2
           };
-          this.attributeCenters = {
-            "2008": {
-              x: this.width / 3,
-              y: this.height / 2
-            },
-            "2009": {
-              x: this.width / 2,
-              y: this.height / 2
-            },
-            "2010": {
-              x: 2 * this.width / 3,
+          this.attributeCenters = {};
+          console.log(uniqueEventList);
+          // debugger;
+          for (var i = 0; i < uniqueEventList.length; i++) {
+            this.attributeCenters[uniqueEventList[i]] = {
+              x: (i + 1) * this.width / uniqueEventList.length + 1,
               y: this.height / 2
             }
-          };
+          }
+          // this.attributeCenters = {
+          //   "nightOwl": {
+          //     x: this.width / 3,
+          //     y: this.height / 2
+          //   },
+          //   "dayTripper": {
+          //     x: 2 * this.width / 3,
+          //     y: this.height / 2
+          //   }
+          // };
           this.layout_gravity = -0.01;
           this.damper = 0.1;
           this.vis = null;
           this.nodes = [];
           this.force = null;
           this.circles = null;
-          this.fill_color = d3.scale.ordinal().domain(["low", "medium", "high"]).range(["#d84b2a", "#beccae", "#7aa25c"]);
-          max_amount = d3.max(this.data, function(d) {
-            return parseInt(d.total_amount);
-          });
-          this.radius_scale = d3.scale.pow().exponent(0.5).domain([0, max_amount]).range([2, 25]);
+          this.fill_color = d3.scale.ordinal().domain(["nightOwl", "dayTripper"]).range(["#4C3670", "#F28E3D"]);
           this.create_nodes();
           this.create_vis();
-          console.log('in');
           return this;
         };
+
+        // creation: "2013-03-25T19:53:26Z"
+        // persona: "nightOwl"
+        // type: "IssuesEvent"
 
         bubbleChart.prototype.create_nodes = function() {
           var that = this;
           this.data.forEach(function(d) {
             var node;
             node = {
-              id: d.id,
-              radius: that.radius_scale(parseInt(d.total_amount)),
-              value: d.total_amount,
-              name: d.grant_title,
-              org: d.organization,
-              group: d.group,
-              year: d.start_year,
+              id: d.creation,
+              radius: 15,
+              creation: d.creation,
+              persona: d.persona,
+              type: d.type,
               x: Math.random() * 900,
               y: Math.random() * 800
             };
             return that.nodes.push(node);
           });
-          return this.nodes.sort(function(a, b) {
-            return b.value - a.value;
-          });
+          return this.nodes;
         };
 
         bubbleChart.prototype.create_vis = function() {
@@ -104,9 +101,9 @@ angular.module('githubleagueClientApp')
           });
           that = this;
           this.circles.enter().append("circle").attr("r", 0).attr("fill", function(d) {
-            return that.fill_color(d.group);
+            return that.fill_color(d.persona);
           }).attr("stroke-width", 2).attr("stroke", function(d) {
-            return d3.rgb(that.fill_color(d.group)).darker();
+            return d3.rgb(that.fill_color(d.persona)).darker();
           }).attr("id", function(d) {
             return "bubble_" + d.id;
           });
@@ -160,20 +157,15 @@ angular.module('githubleagueClientApp')
           var that = this;
           return function(d) {
             var attributeCenterOnScreen;
-            attributeCenterOnScreen = that.attributeCenters[d.year];
+            attributeCenterOnScreen = that.attributeCenters[d.type];
             d.x += (attributeCenterOnScreen.x - d.x) * (that.damper + 0.02) * alpha;
             return d.y += (attributeCenterOnScreen.y - d.y) * (that.damper + 0.02) * alpha;
           };
         };
 
-        var renderChart = function(csv) {
-          bc = new bubbleChart(csv);
-          bc.start();
-          bc.display_group_all();
-          return bc;
-        };
-        d3.json("../geodata/fakeuser.json", renderChart)
-
+        bChart = new bubbleChart(gitData);
+        bChart.start();
+        bChart.display_group_all();
       }
     };
   });
