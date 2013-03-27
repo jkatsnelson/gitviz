@@ -25,22 +25,40 @@ angular.module('githubleagueClientApp')
 
         function bubbleChart(data) {
           this.data = data;
+          var uniqueEventList = _.unique( _.pluck(data, 'type') );
+          var eventCounts = _(data).each(function(event) {
+            var counter = {};
+            if (!counter[event.type]) {
+              counter[event.type] = 1;
+            } else {
+              counter[event.type]++
+            }
+          });
           this.width = $(".hero-unit").width();
           this.height = 600;
           this.center = {
             x: this.width / 2,
             y: this.height / 2
           };
-          this.attributeCenters = {
-            "nightOwl": {
-              x: this.width / 3,
-              y: this.height / 2
-            },
-            "dayTripper": {
-              x: 2 * this.width / 3,
+          this.attributeCenters = {};
+          console.log(uniqueEventList);
+          // debugger;
+          for (var i = 0; i < uniqueEventList.length; i++) {
+            this.attributeCenters[uniqueEventList[i]] = {
+              x: (i + 1) * this.width / uniqueEventList.length + 1,
               y: this.height / 2
             }
-          };
+          }
+          // this.attributeCenters = {
+          //   "nightOwl": {
+          //     x: this.width / 3,
+          //     y: this.height / 2
+          //   },
+          //   "dayTripper": {
+          //     x: 2 * this.width / 3,
+          //     y: this.height / 2
+          //   }
+          // };
           this.layout_gravity = -0.01;
           this.damper = 0.1;
           this.vis = null;
@@ -59,19 +77,17 @@ angular.module('githubleagueClientApp')
 
         bubbleChart.prototype.create_nodes = function() {
           var that = this;
-          console.log('test');
           this.data.forEach(function(d) {
             var node;
             node = {
               id: d.creation,
-              radius: 10,
+              radius: 15,
               creation: d.creation,
               persona: d.persona,
               type: d.type,
               x: Math.random() * 900,
               y: Math.random() * 800
             };
-            console.log('dont hit');
             return that.nodes.push(node);
           });
           return this.nodes;
@@ -141,7 +157,7 @@ angular.module('githubleagueClientApp')
           var that = this;
           return function(d) {
             var attributeCenterOnScreen;
-            attributeCenterOnScreen = that.attributeCenters[d.persona];
+            attributeCenterOnScreen = that.attributeCenters[d.type];
             d.x += (attributeCenterOnScreen.x - d.x) * (that.damper + 0.02) * alpha;
             return d.y += (attributeCenterOnScreen.y - d.y) * (that.damper + 0.02) * alpha;
           };
