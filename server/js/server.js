@@ -23,7 +23,7 @@
     app.use(express.session());
     app.use(express.methodOverride());
     app.use(app.router);
-    app.use(express["static"](path.join(app.pwd, '/app/')));
+    app.use(express["static"](path.join(app.pwd, '/client/app/')));
     return app.use(express.logger());
   });
 

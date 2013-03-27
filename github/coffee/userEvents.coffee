@@ -17,6 +17,7 @@ num = 0
 find = new EventEmitter
 
 find.getEvents = (user) ->
+  console.log user
   url = rootURL + user + eventsURL + auth
   if nextPage then url = nextPage
   request.get url, (err, res, body) ->

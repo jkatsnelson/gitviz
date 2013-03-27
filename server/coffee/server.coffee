@@ -15,7 +15,7 @@ app.configure () ->
   app.use express.session()
   app.use express.methodOverride()
   app.use app.router
-  app.use express.static path.join app.pwd, '/app/'
+  app.use express.static path.join app.pwd, '/client/app/'
   app.use express.logger()
 
 console.log 'Go to http://localhost:3000'

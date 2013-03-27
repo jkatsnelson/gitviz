@@ -34,6 +34,7 @@
   find.getEvents = function(user) {
     var url;
 
+    console.log(user);
     url = rootURL + user + eventsURL + auth;
     if (nextPage) {
       url = nextPage;
