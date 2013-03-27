@@ -1,5 +1,5 @@
 (function() {
-  var Commit, EventEmitter, auth, db, fetchLocation, findCommits, fs, gm, httpLink, locations, nextPage, repoURL, request, saveCommit, traverseList, userURL, _;
+  var Commit, EventEmitter, auth, db, fetchLocation, findCommits, fs, gm, httpLink, locations, nextPage, repoAuthor, repoName, repoURL, request, saveCommit, traverseList, userURL, _;
 
   request = require('request');
 
@@ -27,12 +27,18 @@
 
   nextPage = null;
 
+  repoName = null;
+
+  repoAuthor = null;
+
   findCommits = new EventEmitter;
 
   findCommits.get = function(author, repo) {
     var url;
 
     if (author) {
+      repoAuthor = author;
+      repoName = repo;
       url = repoURL + author + '/' + repo + '/commits';
     }
     if (nextPage) {
@@ -123,7 +129,7 @@
     var newCommit;
 
     newCommit = new Commit({
-      repo: author + '/' + repoName,
+      repo: repoAuthor + '/' + repoName,
       contributor: commit.author.login,
       message: commit.commit.message,
       date: commit.commit.author.date,
@@ -137,6 +143,6 @@
     });
   };
 
-  findCommits.get(repoURL + auth);
+  exports.find = findCommits;
 
 }).call(this);

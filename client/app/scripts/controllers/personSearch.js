@@ -50,7 +50,7 @@ angular.module('githubleagueClientApp')
     };
 
     $scope.searchForRepo = function (gitUser, gitRepo) {
-      $http({method: 'GET', url: '/query/' + gitUser + '/' + gitRepo }).
+      $http({method: 'GET', url: '/query/' + gitUser + '/repo/' + gitRepo }).
         success(function (data, status, headers, config) {
           console.log(gitRepo);
           console.log(data)
