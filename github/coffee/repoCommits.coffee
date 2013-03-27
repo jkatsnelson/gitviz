@@ -13,10 +13,14 @@ repoURL = 'https://api.github.com/repos/'
 userURL = 'https://api.github.com/users/'
 locations = {}
 nextPage = null
+repoName = null
+repoAuthor = null
 findCommits = new EventEmitter
 
 findCommits.get = (author, repo) ->
   if author
+    repoAuthor = author
+    repoName = repo
     url = repoURL + author + '/' + repo + '/commits'
   if nextPage then url = nextPage
   request.get url, (err, res, body) ->
@@ -65,7 +69,7 @@ fetchLocation = (contributor, commitList) ->
 
 saveCommit = (commit, commitList) ->
   newCommit = new Commit
-    repo: author + '/' + repoName
+    repo: repoAuthor + '/' + repoName
     contributor: commit.author.login
     message: commit.commit.message
     date: commit.commit.author.date
@@ -74,4 +78,4 @@ saveCommit = (commit, commitList) ->
     throw err if err
     traverseList commitList
 
-findCommits.get repoURL+auth
+exports.find = findCommits
