@@ -12,6 +12,7 @@ angular.module('githubleagueClientApp')
 
         var bChart,
             gitData = scope.events;
+            console.log('gitData');
 
         $('.playerChart').on('click', function(event) {
           var viewType = event.target.className;

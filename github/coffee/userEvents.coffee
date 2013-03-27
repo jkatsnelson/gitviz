@@ -16,8 +16,7 @@ events = []
 num = 0
 find = new EventEmitter
 
-find.getEvents = (user) ->
-  console.log user
+find.get = (user) ->
   url = rootURL + user + eventsURL + auth
   if nextPage then url = nextPage
   request.get url, (err, res, body) ->
@@ -29,7 +28,7 @@ find.getEvents = (user) ->
       _.each links, (link) ->
         if link.rel is 'next' then nextPage = link.href
         else return
-      if nextPage then find.getEvents user
+      if nextPage then find.get user
       else
         find.emit 'events', events
         saveEvents events
