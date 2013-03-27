@@ -1,35 +1,35 @@
 request = require 'request'
 db = require __dirname + '/../../server/js/db.js'
 gm = require("googlemaps")
-util = require("util")
 fs = require("fs")
 httpLink = require 'http-link'
 _ = require 'underscore'
+EventEmitter = require('events').EventEmitter
 
 Commit = db.Commit
 
-repoName = 'fantasygithub'
-author = 'jkatsnelson'
 auth = '?client_id=2bf1c804756e95d43bec&client_secret=16516757e1d87c3f13802448685375ee04674105'
-repoURL = 'https://api.github.com/repos/'+author+'/'+repoName+'/commits'
+repoURL = 'https://api.github.com/repos/'
 userURL = 'https://api.github.com/users/'
 locations = {}
 nextPage = null
+findCommits = new EventEmitter
 
-getCommits = (url) ->
-  if url
-    request.get url, (err, res, body) ->
-      throw err if err  
-      nextPage = null
-      commitList = JSON.parse body
-      unless res.headers.link
-        return traverseList commitList
-      links = httpLink.parse res.headers.link
-      _.each links, (link) ->
-        if link.rel is 'next' then nextPage = link.href
-        else return
-      traverseList commitList
-  else db.db.close()
+findCommits.get = (author, repo) ->
+  if author
+    url = repoURL + author + '/' + repo + '/commits'
+  if nextPage then url = nextPage
+  request.get url, (err, res, body) ->
+    throw err if err
+    nextPage = null
+    commitList = JSON.parse body
+    unless res.headers.link
+      return traverseList commitList
+    links = httpLink.parse res.headers.link
+    _.each links, (link) ->
+      if link.rel is 'next' then nextPage = link.href
+      else return
+    traverseList commitList
 
 traverseList = (commitList) ->
   if commitList.length
@@ -39,7 +39,10 @@ traverseList = (commitList) ->
     if locations[contributor] then saveCommit commitList.shift(), commitList
     else fetchLocation contributor, commitList
   else
-    if nextPage then getCommits nextPage else db.db.close()
+    if nextPage then findCommits.get()
+    else
+      findCommits.emit 'commits', 'done'
+      db.db.close()
 
 fetchLocation = (contributor, commitList) ->
   request.get userURL + contributor + auth, (err, res, body) ->
@@ -71,4 +74,4 @@ saveCommit = (commit, commitList) ->
     throw err if err
     traverseList commitList
 
-getCommits repoURL+auth
+findCommits.get repoURL+auth
