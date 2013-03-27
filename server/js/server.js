@@ -1,5 +1,5 @@
 (function() {
-  var app, express, github, http, path, routes;
+  var app, commits, events, express, http, path, routes;
 
   express = require('express');
 
@@ -9,7 +9,9 @@
 
   path = require('path');
 
-  github = require(__dirname + '/../../github/js/userEvents.js');
+  events = require(__dirname + '/../../github/js/userEvents.js');
+
+  commits = require(__dirname + '/../../github/js/repoCommits.js');
 
   app = express();
 
@@ -30,10 +32,17 @@
   console.log('Go to http://localhost:3000');
 
   app.get('/query/:user', function(req, res) {
-    github.find.on('events', function(events) {
+    events.find.on('events', function(events) {
       return res.send(events);
     });
-    return github.find.getEvents(req.params.user);
+    return events.find.get(req.params.user);
+  });
+
+  app.get('query/:user/:repo', function(req, res) {
+    commits.find.on('commits', function(commits) {
+      return res.send(commits);
+    });
+    return commits.find.get(req.params.user, req.params.repo);
   });
 
   app.listen(3000);

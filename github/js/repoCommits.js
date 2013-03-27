@@ -1,5 +1,5 @@
 (function() {
-  var Commit, auth, author, db, fetchLocation, fs, getCommits, gm, httpLink, locations, nextPage, repoName, repoURL, request, saveCommit, traverseList, userURL, util, _;
+  var Commit, EventEmitter, auth, db, fetchLocation, findCommits, fs, gm, httpLink, locations, nextPage, repoURL, request, saveCommit, traverseList, userURL, _;
 
   request = require('request');
 
@@ -7,23 +7,19 @@
 
   gm = require("googlemaps");
 
-  util = require("util");
-
   fs = require("fs");
 
   httpLink = require('http-link');
 
   _ = require('underscore');
 
+  EventEmitter = require('events').EventEmitter;
+
   Commit = db.Commit;
-
-  repoName = 'fantasygithub';
-
-  author = 'jkatsnelson';
 
   auth = '?client_id=2bf1c804756e95d43bec&client_secret=16516757e1d87c3f13802448685375ee04674105';
 
-  repoURL = 'https://api.github.com/repos/' + author + '/' + repoName + '/commits';
+  repoURL = 'https://api.github.com/repos/';
 
   userURL = 'https://api.github.com/users/';
 
@@ -31,32 +27,38 @@
 
   nextPage = null;
 
-  getCommits = function(url) {
-    if (url) {
-      return request.get(url, function(err, res, body) {
-        var commitList, links;
+  findCommits = new EventEmitter;
 
-        if (err) {
-          throw err;
-        }
-        nextPage = null;
-        commitList = JSON.parse(body);
-        if (!res.headers.link) {
-          return traverseList(commitList);
-        }
-        links = httpLink.parse(res.headers.link);
-        _.each(links, function(link) {
-          if (link.rel === 'next') {
-            return nextPage = link.href;
-          } else {
+  findCommits.get = function(author, repo) {
+    var url;
 
-          }
-        });
-        return traverseList(commitList);
-      });
-    } else {
-      return db.db.close();
+    if (author) {
+      url = repoURL + author + '/' + repo + '/commits';
     }
+    if (nextPage) {
+      url = nextPage;
+    }
+    return request.get(url, function(err, res, body) {
+      var commitList, links;
+
+      if (err) {
+        throw err;
+      }
+      nextPage = null;
+      commitList = JSON.parse(body);
+      if (!res.headers.link) {
+        return traverseList(commitList);
+      }
+      links = httpLink.parse(res.headers.link);
+      _.each(links, function(link) {
+        if (link.rel === 'next') {
+          return nextPage = link.href;
+        } else {
+
+        }
+      });
+      return traverseList(commitList);
+    });
   };
 
   traverseList = function(commitList) {
@@ -76,8 +78,9 @@
       }
     } else {
       if (nextPage) {
-        return getCommits(nextPage);
+        return findCommits.get();
       } else {
+        findCommits.emit('commits', 'done');
         return db.db.close();
       }
     }
@@ -134,6 +137,6 @@
     });
   };
 
-  getCommits(repoURL + auth);
+  findCommits.get(repoURL + auth);
 
 }).call(this);
