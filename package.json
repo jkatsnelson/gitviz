@@ -13,6 +13,7 @@
     "routes": "*",
     "ejs": "*",
     "request": "*",
-    "http-link": "*"
+    "http-link": "*",
+    "googlemaps": "*"
   }
 }

@@ -39,9 +39,11 @@ angular.module('githubleagueClientApp')
 
     $scope.searchForUser = function (gitUser) {
       $scope.findingPlayer = true;
+      console.log('logicmason');
       $http({method: 'GET', url: '/query/'+ gitUser }).
         success(function(data, status, headers, config) {
           $scope.events = createDateTypeObjects(data);
+          // console.log(data);
           $scope.findingPlayer = false;
           $scope.personReady = true;
         }).
@@ -57,7 +59,7 @@ angular.module('githubleagueClientApp')
           $scope.findingRepo = false;
           $scope.repoReady = true;
           console.log(gitRepo);
-          console.log(data)
+          console.log(data);
         }).
         error(function (data, status, headers, config) {
           console.log(data);

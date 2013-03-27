@@ -22,7 +22,6 @@ app.configure () ->
 console.log 'Go to http://localhost:3000'
 
 app.get '/query/:user', (req, res) ->
-
   events.find.on 'events', (events) ->
     res.send events
   events.find.get req.params.user
