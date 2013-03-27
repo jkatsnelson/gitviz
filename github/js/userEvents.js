@@ -1,5 +1,5 @@
 (function() {
-  var EventEmitter, UserEvent, auth, db, events, eventsURL, getEvents, httpLink, nextPage, request, rootURL, saveEvents, user, util, _;
+  var EventEmitter, UserEvent, auth, db, events, eventsURL, find, httpLink, nextPage, num, request, rootURL, saveEvents, user, util, _;
 
   request = require('request');
 
@@ -27,44 +27,52 @@
 
   events = [];
 
-  getEvents = function(user) {
-    var that, url;
+  num = 0;
 
-    that = this;
+  find = new EventEmitter;
+
+  find.getEvents = function(user) {
+    var url;
+
     url = rootURL + user + eventsURL + auth;
+    if (nextPage) {
+      url = nextPage;
+    }
     return request.get(url, function(err, res, body) {
       var links;
 
       if (err) {
         throw err;
       }
-      links = httpLink.parse(res.headers.link);
-      events = events.concat(JSON.parse(body));
-      nextPage = null;
-      _.each(links, function(link) {
-        if (link.rel === 'next') {
-          return nextPage = link.href;
-        } else {
+      if (res.headers.link) {
+        links = httpLink.parse(res.headers.link);
+        events = events.concat(JSON.parse(body));
+        nextPage = null;
+        _.each(links, function(link) {
+          if (link.rel === 'next') {
+            return nextPage = link.href;
+          } else {
 
+          }
+        });
+        if (nextPage) {
+          return find.getEvents(user);
+        } else {
+          find.emit('events', events);
+          return saveEvents(events);
         }
-      });
-      if (nextPage) {
-        return getEvents(nextPage);
       } else {
-        that.emit('events', events);
-        return saveEvents(events);
+        return find.emit('events', events);
       }
     });
   };
-
-  util.inherits(getEvents, EventEmitter);
 
   saveEvents = function(events) {
     var userEvent;
 
     userEvent = new UserEvent({
       user: user,
-      event: events
+      events: events
     });
     return userEvent.save(function(err) {
       if (err) {
@@ -74,6 +82,6 @@
     });
   };
 
-  exports.getEvents = getEvents;
+  exports.find = find;
 
 }).call(this);

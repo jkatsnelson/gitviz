@@ -16,7 +16,7 @@ Commit = mongoose.model 'Commit', commitSchema
 
 userEventSchema = new Schema
   user: String
-  event: Object
+  events: Object
 
 UserEvent = mongoose.model 'UserEvent', userEventSchema
 

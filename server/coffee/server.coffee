@@ -20,15 +20,11 @@ app.configure () ->
 
 console.log 'Go to http://localhost:3000'
 
-app.get '/wat', (req, res) ->
-  console.log 'wat'
-  res.send 'wat'
-
 app.get '/query/:user', (req, res) ->
-  debugger
-  github.getEvents().on 'events', (events) ->
+
+  github.find.on 'events', (events) ->
     res.send events
-  github.getEvents req.params.user
+  github.find.getEvents req.params.user
 
 app.listen 3000
 

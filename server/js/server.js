@@ -29,16 +29,11 @@
 
   console.log('Go to http://localhost:3000');
 
-  app.get('/wat', function(req, res) {
-    console.log('wat');
-    return res.send('wat');
-  });
-
   app.get('/query/:user', function(req, res) {
-    debugger;    github.getEvents().on('events', function(events) {
+    github.find.on('events', function(events) {
       return res.send(events);
     });
-    return github.getEvents(req.params.user);
+    return github.find.getEvents(req.params.user);
   });
 
   app.listen(3000);
