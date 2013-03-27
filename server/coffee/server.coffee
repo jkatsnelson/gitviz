@@ -27,7 +27,7 @@ app.get '/query/:user', (req, res) ->
     res.send events
   events.find.get req.params.user
 
-app.get 'query/:user/:repo', (req, res) ->
+app.get '/query/:user/repo/:repo', (req, res) ->
 
   commits.find.on 'commits', (commits) ->
     res.send commits
