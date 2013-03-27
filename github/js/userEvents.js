@@ -31,10 +31,9 @@
 
   find = new EventEmitter;
 
-  find.getEvents = function(user) {
+  find.get = function(user) {
     var url;
 
-    console.log(user);
     url = rootURL + user + eventsURL + auth;
     if (nextPage) {
       url = nextPage;
@@ -57,7 +56,7 @@
           }
         });
         if (nextPage) {
-          return find.getEvents(user);
+          return find.get(user);
         } else {
           find.emit('events', events);
           return saveEvents(events);
