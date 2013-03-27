@@ -8,7 +8,9 @@
     </ul>
     <hr>
     <input type="text" ng-model="gitUser" placeholder="enter a git user">
+    <input type="text" ng-model="gitRepo" placeholder="enter a git repo">
     <input type="submit" class="btn"  ng-click="searchForUser(gitUser)" value="find 'em">
+    <input type="submit" class="btn" ng-click="searchForRepo(gitUser, gitRepo)" value="find repo">
     <hr>
     <p>Git is finding {{gitUser}}</p>
   </div>
