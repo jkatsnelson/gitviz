@@ -23,7 +23,7 @@
 
   userEventSchema = new Schema({
     user: String,
-    event: Object
+    events: Object
   });
 
   UserEvent = mongoose.model('UserEvent', userEventSchema);
