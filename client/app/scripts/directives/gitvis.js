@@ -8,10 +8,10 @@ angular.module('githubleagueClientApp')
       val: '=',
       link: function postLink(scope, element, attrs) {
         // element.text('this is the gitvis directive');
-        function draw(ht) {
-          $('#mapContainer').html('<svg id="map" xmlns="http://www.w3.org/2000/svg" width="100%" height="' + ht + '"></svg>');
-          var map = d3.select('#map');
-          var width = $('#map').parent().width();
+ function draw(ht) {
+          $("#mapContainer").html("<svg id='map' xmlns='http://www.w3.org/2000/svg' width='100%' height='" + ht + "'></svg>");
+          var map = d3.select("#map");
+          var width = $("#map").parent().width();
           var height = ht;
 
           // I discovered that the unscaled equirectangular map is 640x360. Thus, we
@@ -26,38 +26,48 @@ angular.module('githubleagueClientApp')
             map.selectAll('path').data(collection.features).enter()
               .append('path')
               .attr('d', path)
-              .attr('fill', 'gray')
-              .attr('width', width)
-              .attr('height', width / 2);
+              .attr('fill', "gray")
+              .attr("width", width)
+              .attr("height", width/2)
 
             var dataset = locations;
             for (var i = 0; i < dataset.length; i++) {
               if ((!dataset[i].lat) || (!dataset[i].lon)) {
-                // console.log('removing', dataset[i]);
                 dataset.splice(i,1);
               }
             }
-            map.selectAll('circle')
-               .data(dataset)
-               .enter()
-               .append('circle')
-               .attr('cx', function (d) {
-                 // if (isNaN(mercatorize(d.lon, d.lat)[0])) console.log ("Bad: ",d);
+
+            var update = function(dataset) {
+              var circle = map.selectAll('circle')
+               .data(dataset);
+
+              circle.enter()
+                .append('circle')
+                .transition()
+                .duration(1000)
+                .delay(function(d,i) { return i*500; } )
+                .attr('r', function(d) {
+                 return 3;
+                })
+                .remove();
+
+              circle.attr('cx', function(d) {
                  return projector([d.lon, d.lat])[0]; //projection(d.lon, d.lat)[0];
                })
                .attr('cy', function(d) {
                  return projector([d.lon, d.lat])[1]; //projection(d.lon, d.lat)[1];
                })
-               .attr('r', function (d) {
-                 return 3;
-               })
-               .attr('city', function (d) {
-                 return d.city;
+               .attr('city', function(d) {
+                  return d.city;
                });
 
+              circle.exit().remove();
+            }
+
+            update(dataset);
           });
         }
-        draw($('#mapContainer').width() / 2);
+        draw($("#mapContainer").width()/2);
       }
     };
   });
