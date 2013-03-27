@@ -40,8 +40,7 @@ angular.module('githubleagueClientApp')
     $scope.searchForUser = function (gitUser) {
       $scope.findingPlayer = true;
       $http({method: 'GET', url: '/query/'+ gitUser }).
-        success(function (data, status, headers, config) {
-          console.log(gitUser);
+        success(function(data, status, headers, config) {
           $scope.events = createDateTypeObjects(data);
           $scope.findingPlayer = false;
           $scope.personReady = true;
