@@ -2,7 +2,8 @@ express = require 'express'
 routes = require 'routes'
 http = require 'http'
 path = require 'path'
-github = require __dirname + '/../../github/js/userEvents.js'
+events = require __dirname + '/../../github/js/userEvents.js'
+commits = require __dirname + '/../../github/js/repoCommits.js'
 app = express()
 
 app.configure () ->
@@ -22,9 +23,15 @@ console.log 'Go to http://localhost:3000'
 
 app.get '/query/:user', (req, res) ->
 
-  github.find.on 'events', (events) ->
+  events.find.on 'events', (events) ->
     res.send events
-  github.find.getEvents req.params.user
+  events.find.get req.params.user
+
+app.get 'query/:user/:repo', (req, res) ->
+
+  commits.find.on 'commits', (commits) ->
+    res.send commits
+  commits.find.get req.params.user, req.params.repo
 
 app.listen 3000
 
