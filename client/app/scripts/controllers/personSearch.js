@@ -38,10 +38,12 @@ angular.module('githubleagueClientApp')
     };
 
     $scope.searchForUser = function (gitUser) {
+      $scope.findingPlayer = true;
       $http({method: 'GET', url: '/query/'+ gitUser }).
         success(function (data, status, headers, config) {
           console.log(gitUser);
           $scope.events = createDateTypeObjects(data);
+          $scope.findingPlayer = false;
           $scope.personReady = true;
         }).
         error(function (data, status, headers, config) {
@@ -50,8 +52,11 @@ angular.module('githubleagueClientApp')
     };
 
     $scope.searchForRepo = function (gitUser, gitRepo) {
+      $scope.findingRepo = true;
       $http({method: 'GET', url: '/query/' + gitUser + '/repo/' + gitRepo }).
         success(function (data, status, headers, config) {
+          $scope.findingRepo = false;
+          $scope.repoReady = true;
           console.log(gitRepo);
           console.log(data)
         }).
