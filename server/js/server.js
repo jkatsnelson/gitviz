@@ -34,7 +34,6 @@
   app.get('/query/:user', function(req, res) {
     userEvents = userEvents.init();
     userEvents.on('events', function(events) {
-      console.log(events);
       return res.send(events);
     });
     return userEvents.get(req.params.user);
