@@ -3,7 +3,6 @@ db = require __dirname+'/../../server/js/db.js'
 _ = require 'underscore'
 httpLink = require 'http-link'
 EventEmitter = require('events').EventEmitter
-util = require 'util'
 
 UserEvent = db.UserEvent
 
@@ -14,9 +13,16 @@ auth = '?client_id=2bf1c804756e95d43bec&client_secret=16516757e1d87c3f1380244868
 nextPage = null
 events = []
 num = 0
-find = new EventEmitter
 
-find.get = (user) ->
+init = () ->
+  events = []
+  eventMaker = new EventEmitter
+  eventMaker.init = init
+  eventMaker.get = get
+  return eventMaker
+
+get = (user) ->
+  that = @
   url = rootURL + user + eventsURL + auth
   if nextPage then url = nextPage
   request.get url, (err, res, body) ->
@@ -28,12 +34,12 @@ find.get = (user) ->
       _.each links, (link) ->
         if link.rel is 'next' then nextPage = link.href
         else return
-      if nextPage then find.get user
+      if nextPage then that.get user
       else
-        find.emit 'events', events
+        that.emit 'events', events
         saveEvents events
     else
-      find.emit 'events', events
+      that.emit 'events', events
 
 saveEvents = (events) ->
   userEvent = new UserEvent
@@ -43,4 +49,4 @@ saveEvents = (events) ->
     throw err if err
     db.db.close()
 
-exports.find = find
+exports.init = init
