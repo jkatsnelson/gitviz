@@ -26,7 +26,7 @@ angular.module('githubleagueClientApp')
         function bubbleChart(data) {
           this.data = data;
           var uniqueEventList = _.unique( _.pluck(data, 'type') );
-          var eventCounter = {};
+          window.eventCounter = {};
           _(data).each(function(event) {
             if (!eventCounter[event.type]) {
               eventCounter[event.type] = 1;
@@ -34,34 +34,31 @@ angular.module('githubleagueClientApp')
               eventCounter[event.type]++
             }
           });
-          // console.log(eventCounter);
-          this.width = $(".container").width();
+          var leastEvts = _.min(eventCounter);
+          var mostEvts = _.max(eventCounter);
+          console.log(eventCounter);
+          this.width = 1200; //$(".person-search").width();
           this.height = 600;
           this.center = {
             x: this.width / 2,
             y: this.height / 2
           };
           this.attributeCenters = {};
+
+                           // d3.scale.linear().domain([20,80]).range([0,120])
+          // var widthScale = d3.scale.linear().domain([leastEvts, mostEvts]).range([10, (this.width-100)]);
           // debugger;
           for (var i = 0; i < uniqueEventList.length; i++) {
             var evtType = uniqueEventList[i];
-            console.log(eventCounter, ' is event counter');
-            console.log('this is event type', eventCounter[evtType]);
+            // debugger;
+            console.log('event type', evtType);
+            console.log('evnt Counter type: ', eventCounter[evtType]);
             this.attributeCenters[evtType] = {
-              x: (i + 1) * this.width / uniqueEventList.length + Math.sqrt(eventCounter[evtType]),
+              // x: widthScale(eventCounter[evtType]),
+              x: (i + 1) * this.width / (uniqueEventList.length + 1),
               y: this.height / 2
             }
           }
-          // this.attributeCenters = {
-          //   "nightOwl": {
-          //     x: this.width / 3,
-          //     y: this.height / 2
-          //   },
-          //   "dayTripper": {
-          //     x: 2 * this.width / 3,
-          //     y: this.height / 2
-          //   }
-          // };
           this.layout_gravity = -0.01;
           this.damper = 0.1;
           this.vis = null;
