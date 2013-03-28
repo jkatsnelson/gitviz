@@ -1,5 +1,5 @@
 (function() {
-  var EventEmitter, UserEvent, auth, db, events, eventsURL, find, httpLink, nextPage, num, request, rootURL, saveEvents, user, util, _;
+  var EventEmitter, UserEvent, auth, db, events, eventsURL, get, httpLink, init, nextPage, num, request, rootURL, saveEvents, user, _;
 
   request = require('request');
 
@@ -10,8 +10,6 @@
   httpLink = require('http-link');
 
   EventEmitter = require('events').EventEmitter;
-
-  util = require('util');
 
   UserEvent = db.UserEvent;
 
@@ -29,11 +27,20 @@
 
   num = 0;
 
-  find = new EventEmitter;
+  init = function() {
+    var eventMaker;
 
-  find.get = function(user) {
-    var url;
+    events = [];
+    eventMaker = new EventEmitter;
+    eventMaker.init = init;
+    eventMaker.get = get;
+    return eventMaker;
+  };
 
+  get = function(user) {
+    var that, url;
+
+    that = this;
     url = rootURL + user + eventsURL + auth;
     if (nextPage) {
       url = nextPage;
@@ -56,13 +63,13 @@
           }
         });
         if (nextPage) {
-          return find.get(user);
+          return that.get(user);
         } else {
-          find.emit('events', events);
+          that.emit('events', events);
           return saveEvents(events);
         }
       } else {
-        return find.emit('events', events);
+        return that.emit('events', events);
       }
     });
   };
@@ -82,6 +89,6 @@
     });
   };
 
-  exports.find = find;
+  exports.init = init;
 
 }).call(this);

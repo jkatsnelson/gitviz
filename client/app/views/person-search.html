@@ -18,22 +18,25 @@
       <input type="submit" class="btn"  ng-click="searchForUser(gitUser)" value="Find User">
       <input type="submit" class="btn" ng-click="searchForRepo(gitUser, gitRepo)" value="Find Repo">
     </ul>
+    <div ui-if="repoReady">
+      <gitviz></gitviz>
+    </div>
+    <div ui-if="personReady">
+      <player></player>
+    </div>
     <div ui-if="findingPlayer">
       <p>Git is finding {{gitUser}}</p>
       <div class="progress progress-striped active">
         <div class="bar bar-user" style="width: 40%;"></div>
       </div>
     </div>
-  <!--   <div ui-if="findingRepo">
+    <div ui-if="repoReady">
+      <gitviz></gitviz>
+    </div>
+    <div ui-if="findingRepo">
       <p>Git is finding {{gitRepo}}</p>
       <div class="progress progress-striped active">
         <div class="bar bar-repo" style="width: 40%;"></div>
-    </div>
-    <div ui-if="repoReady">
-      <gitviz></gitviz>
-    </div> -->
-    <div ui-if="personReady">
-      <player></player>
     </div>
   </div>
 
