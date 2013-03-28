@@ -26,14 +26,15 @@ angular.module('githubleagueClientApp')
         function bubbleChart(data) {
           this.data = data;
           var uniqueEventList = _.unique( _.pluck(data, 'type') );
-          // var eventCounts = _(data).each(function(event) {
-          //   var counter = {};
-          //   if (!counter[event.type]) {
-          //     counter[event.type] = 1;
-          //   } else {
-          //     counter[event.type]++
-          //   }
-          // });
+          var eventCounter = {};
+          _(data).each(function(event) {
+            if (!eventCounter[event.type]) {
+              eventCounter[event.type] = 1;
+            } else {
+              eventCounter[event.type]++
+            }
+          });
+          // console.log(eventCounter);
           this.width = $(".container").width();
           this.height = 600;
           this.center = {
@@ -41,11 +42,13 @@ angular.module('githubleagueClientApp')
             y: this.height / 2
           };
           this.attributeCenters = {};
-          console.log(uniqueEventList);
           // debugger;
           for (var i = 0; i < uniqueEventList.length; i++) {
-            this.attributeCenters[uniqueEventList[i]] = {
-              x: (i + 1) * this.width / uniqueEventList.length + 1,
+            var evtType = uniqueEventList[i];
+            console.log(eventCounter, ' is event counter');
+            console.log('this is event type', eventCounter[evtType]);
+            this.attributeCenters[evtType] = {
+              x: (i + 1) * this.width / uniqueEventList.length + Math.sqrt(eventCounter[evtType]),
               y: this.height / 2
             }
           }
