@@ -3,12 +3,12 @@
 angular.module('githubleagueClientApp')
   .directive('gitvis', function () {
     return {
-      template: '<div id="mapContainer"></div>',
+      template: "<div id='mapContainer'></div>",
       restrict: 'E',
       val: '=',
       link: function postLink(scope, element, attrs) {
         // element.text('this is the gitvis directive');
- function draw(ht) {
+        function draw(ht) {
           $("#mapContainer").html("<svg id='map' xmlns='http://www.w3.org/2000/svg' width='100%' height='" + ht + "'></svg>");
           var map = d3.select("#map");
           var width = $("#map").parent().width();
@@ -20,8 +20,8 @@ angular.module('githubleagueClientApp')
           // instead. The aspect ratio of an equirectangular map is 2:1, so that's why
           // our height is half of our width.
 
-          var projector = d3.geo.equirectangular().scale((width/600)*600).translate([width/2, height/2]);
-          var path = d3.geo.path().projection(projector);
+          var projection = d3.geo.equirectangular().scale((width/600)*600).translate([width/2, height/2]);
+          var path = d3.geo.path().projection(projection);
           d3.json('../geodata/world-map.json', function(collection) {
             map.selectAll('path').data(collection.features).enter()
               .append('path')
@@ -33,41 +33,48 @@ angular.module('githubleagueClientApp')
             var dataset = locations;
             for (var i = 0; i < dataset.length; i++) {
               if ((!dataset[i].lat) || (!dataset[i].lon)) {
+                console.log('removing', dataset[i]);
                 dataset.splice(i,1);
               }
             }
 
-            var update = function(dataset) {
-              var circle = map.selectAll('circle')
-               .data(dataset);
-
-              circle.enter()
-                .append('circle')
-                .transition()
-                .duration(1000)
-                .delay(function(d,i) { return i*500; } )
-                .attr('r', function(d) {
-                 return 3;
-                })
-                .remove();
-
-              circle.attr('cx', function(d) {
-                 return projector([d.lon, d.lat])[0]; //projection(d.lon, d.lat)[0];
+            map.selectAll('circle')
+               .data(dataset)
+               .enter()
+               .append('circle')
+               .transition().ease("linear")
+               .attr('cx', width/2)
+               .duration()
+               .transition().ease("linear")
+               .delay(function(d,i) { return (i+1) * 150; })
+               .duration(function(d, i) { return 150; })
+               .attr('cx', function(d) {
+                 return projection([d.lon, d.lat])[0]; //projection(d.lon, d.lat)[0];
                })
                .attr('cy', function(d) {
-                 return projector([d.lon, d.lat])[1]; //projection(d.lon, d.lat)[1];
+                 return projection([d.lon, d.lat])[1]; //projection(d.lon, d.lat)[1];
+               })
+               .attr('r', function(d) {
+                 return 3;
                })
                .attr('city', function(d) {
                   return d.city;
-               });
+               })
+               .duration(function (d,i) { return 150; })
+               .transition().ease("linear")
+               .delay(function(d, i) { return (i+2) * 150 - 10; })
+               .duration()
+               .attr('fill', 'red')
+               .attr('r', 6)
+               .transition().ease("linear")
+               .delay(function(d, i) { return (i+2) * 150 + 30; })
+               .attr('fill', 'black')
+               .attr('r', 3)
 
-              circle.exit().remove();
-            }
-
-            update(dataset);
           });
         }
         draw($("#mapContainer").width()/2);
+
       }
     };
   });
