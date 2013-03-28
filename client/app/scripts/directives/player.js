@@ -37,7 +37,7 @@ angular.module('githubleagueClientApp')
           var leastEvts = _.min(eventCounter);
           var mostEvts = _.max(eventCounter);
           console.log(eventCounter);
-          this.width = 1200; //$(".person-search").width();
+          this.width = $(".person-search").width();
           this.height = 600;
           this.center = {
             x: this.width / 2,
@@ -45,17 +45,20 @@ angular.module('githubleagueClientApp')
           };
           this.attributeCenters = {};
 
+
                            // d3.scale.linear().domain([20,80]).range([0,120])
-          // var widthScale = d3.scale.linear().domain([leastEvts, mostEvts]).range([10, (this.width-100)]);
-          // debugger;
+          var widthScale = d3.scale.linear().domain([leastEvts, mostEvts]).range([300, 600]);
+          debugger;
           for (var i = 0; i < uniqueEventList.length; i++) {
             var evtType = uniqueEventList[i];
-            // debugger;
+            var evtCount = eventCounter[evtType];
+            console.log('this is event count', evtCount);
+            debugger;
             console.log('event type', evtType);
             console.log('evnt Counter type: ', eventCounter[evtType]);
             this.attributeCenters[evtType] = {
-              // x: widthScale(eventCounter[evtType]),
-              x: (i + 1) * this.width / (uniqueEventList.length + 1),
+              x: widthScale(evtCount),
+              // x: (i + 1) * this.width / (uniqueEventList.length),
               y: this.height / 2
             }
           }
