@@ -29,13 +29,19 @@ app.get '/query/:user', (req, res) ->
   userEvents.get req.params.user
 
 app.get '/query/:user/repo/:repo', (req, res) ->
-  commits = commits.init()
-  res.write '['
-  commits.on 'commit', (commit) ->
-    res.write commit
-  commits.on 'end', () ->
-    res.end ']'
-  commits.get req.params.user, req.params.repo
+  repoRoute = req.params.user + '/' + req.params.repo
+  db.Commit.findOne { 'repo': repoRoute }, 'commits', (err, commitList) ->
+    throw err if err
+    if commitList
+      res.send commitList
+    else
+      commits = commits.init()
+      res.write '['
+      commits.on 'commit', (commit) ->
+        res.write commit
+      commits.on 'end', () ->
+        res.end ']'
+      commits.get req.params.user, req.params.repo
 
 app.listen 3000
 
