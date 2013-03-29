@@ -1,5 +1,5 @@
 (function() {
-  var EventEmitter, UserEvent, auth, db, events, eventsURL, get, httpLink, init, nextPage, request, rootURL, saveEvents, user, _;
+  var EventEmitter, UserEvent, auth, db, events, eventsURL, get, httpLink, init, nextPage, request, rootURL, user, _;
 
   request = require('request');
 
@@ -66,27 +66,11 @@
         if (nextPage) {
           return that.get(user);
         } else {
-          that.emit('events', events);
-          return saveEvents(events);
+          return that.emit('events', events);
         }
       } else {
         return that.emit('events', events);
       }
-    });
-  };
-
-  saveEvents = function(events) {
-    var userEvent;
-
-    userEvent = new UserEvent({
-      user: user,
-      events: events
-    });
-    return userEvent.save(function(err) {
-      if (err) {
-        throw err;
-      }
-      return db.db.close();
     });
   };
 

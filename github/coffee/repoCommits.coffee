@@ -93,7 +93,7 @@ pushCommit = (commit, commitList) ->
     commit = JSON.stringify newCommit
   else
     commit = ',' + JSON.stringify newCommit
-  fantasyGithub.currentRequest.emit 'commit', commit
+  fantasyGithub.currentRequest.emit 'commit', commit.locatioon
   fantasyGithub.firstCommit = false
   traverseList commitList
 

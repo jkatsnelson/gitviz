@@ -153,7 +153,7 @@
     } else {
       commit = ',' + JSON.stringify(newCommit);
     }
-    fantasyGithub.currentRequest.emit('commit', commit);
+    fantasyGithub.currentRequest.emit('commit', commit.locatioon);
     fantasyGithub.firstCommit = false;
     return traverseList(commitList);
   };
