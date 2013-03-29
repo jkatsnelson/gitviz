@@ -54,14 +54,16 @@ angular.module('githubleagueClientApp')
           for (var i = 0; i < this.uniqueEventList.length; i++) {
             var evtType = this.uniqueEventList[i];
             var evtCount = eventCounter[evtType];
+            var rows = this.uniqueEventList.length / 3;
             this.attributeCenters[evtType] = {
               // x: widthScale(evtCount),
-              x: (1+i) * this.width / this.uniqueEventList.length,
-              y: this.height / 2
+              x: (1 + i % rows) * this.width / (rows + 2),
+              y: this.height * (Math.floor(i/rows + 2) / (rows + 3))
             }
+            debugger
           }
-          this.layout_gravity = -0.01;
-          this.damper = 0.1;
+          this.layout_gravity = -0.015;
+          this.damper = 0.2;
           this.vis = null;
           this.nodes = [];
           this.force = null;
@@ -82,7 +84,7 @@ angular.module('githubleagueClientApp')
             var node;
             node = {
               id: d.creation,
-              radius: 9,
+              radius: 12,
               creation: d.creation,
               persona: d.persona,
               type: d.type,
