@@ -39,16 +39,16 @@ get = (user) ->
       if nextPage then that.get user
       else
         that.emit 'events', events
-        saveEvents events
+        # saveEvents events
     else
       that.emit 'events', events
 
-saveEvents = (events) ->
-  userEvent = new UserEvent
-    user: user
-    events: events
-  userEvent.save (err) ->
-    throw err if err
-    db.db.close()
+# saveEvents = (events) ->
+#   userEvent = new UserEvent
+#     user: user
+#     events: events
+#   userEvent.save (err) ->
+#     throw err if err
+#     db.db.close()
 
 exports.init = init
