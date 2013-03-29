@@ -11,44 +11,43 @@ Commit = db.Commit
 auth = '?client_id=2bf1c804756e95d43bec&client_secret=16516757e1d87c3f13802448685375ee04674105'
 repoURL = 'https://api.github.com/repos/'
 userURL = 'https://api.github.com/users/'
-locations = {}
-commits = []
-nextPage = null
-repoName = null
-repoAuthor = null
-that = null
-page = 0
-firstCommit = true
 
+fantasyGithub = {}
+
+
+reset = () ->
+  fantasyGithub.locations = {}
+  fantasyGithub.commits = []
+  fantasyGithub.nextPage = null
+  fantasyGithub.repoName = null
+  fantasyGithub.repoAuthor = null
+  fantasyGithub.currentRequest = null
+  fantasyGithub.page = 0
+  fantasyGithub.firstCommit = true
 init = () ->
-  locations = {}
-  commits = []
-  nextPage = null
-  that = null
-  page = 0
-  firstCommit = true
+  reset()
   eventMaker = new EventEmitter
   eventMaker.init = init
   eventMaker.get = get
   return eventMaker
 
 get = (author, repo) ->
-  that = @
+  fantasyGithub.currentRequest = @
   if author
-    repoAuthor = author
-    repoName = repo
-    url = repoURL + repoAuthor + '/' + repoName + '/commits' + auth
-  if nextPage then url = nextPage
+    fantasyGithub.repoAuthor = author
+    fantasyGithub.repoName = repo
+    url = repoURL + author + '/' + repo + '/commits' + auth
+  if fantasyGithub.nextPage then url = fantasyGithub.nextPage
   request.get url, (err, res, body) ->
     throw err if err
-    nextPage = null
+    fantasyGithub.nextPage = null
     commitList = JSON.parse body
     unless res.headers.link
       return traverseList commitList
     _(httpLink.parse res.headers.link).each (link) ->
       if link.rel is 'next'
-        nextPage = link.href
-        console.log page++
+        fantasyGithub.nextPage = link.href
+        console.log fantasyGithub.page++
       else return
     traverseList commitList
 
@@ -57,12 +56,12 @@ traverseList = (commitList) ->
     unless commitList[0].author
       commitList[0].author = login: 'not specified'
     contributor = commitList[0].author.login
-    if locations[contributor] then pushCommit commitList.shift(), commitList
+    if fantasyGithub.locations.contributor then pushCommit commitList.shift(), commitList
     else fetchLocation contributor, commitList
   else
-    if nextPage then that.get()
+    if fantasyGithub.nextPage then fantasyGithub.currentRequest.get()
     else
-      saveCommits commits
+      saveCommits fantasyGithub.commits
 
 fetchLocation = (contributor, commitList) ->
   request.get userURL + contributor + auth, (err, res, body) ->
@@ -74,7 +73,7 @@ fetchLocation = (contributor, commitList) ->
     gm.geocode user.location, (err, data) ->
       throw err if err
       if data.status is "OK"
-        locations[contributor] =
+        fantasyGithub.locations.contributor =
           userInput: user.location
           city: data.results[0].formatted_address
           lat: data.results[0].geometry.location.lat
@@ -84,28 +83,28 @@ fetchLocation = (contributor, commitList) ->
 
 pushCommit = (commit, commitList) ->
   newCommit =
-    repo: repoAuthor + '/' + repoName
+    repo: fantasyGithub.repoAuthor + '/' + fantasyGithub.repoName
     contributor: commit.author.login
     message: commit.commit.message
     date: commit.commit.author.date
-    location : locations[commit.author.login]
-  commits.push newCommit
-  if firstCommit
+    location : fantasyGithub.locations[commit.author.login]
+  fantasyGithub.commits.push newCommit
+  if fantasyGithub.firstCommit
     commit = JSON.stringify newCommit
   else
     commit = ',' + JSON.stringify newCommit
-  that.emit 'commit', commit
-  firstCommit = false
+  fantasyGithub.currentRequest.emit 'commit', commit
+  fantasyGithub.firstCommit = false
   traverseList commitList
 
 saveCommits = (commits) ->
-  that.emit 'end', 'done!'
+  fantasyGithub.currentRequest.emit 'end', 'done!'
   newCommit = new Commit
-    repo: repoAuthor + '/' + repoName
+    repo: fantasyGithub.repoAuthor + '/' + fantasyGithub.repoName
     commits: commits
   newCommit.save (err) ->
     throw err if err
-    console.log 'saved '+ repoAuthor + '/' + repoName
+    console.log 'saved '+ fantasyGithub.repoAuthor + '/' + fantasyGithub.repoName
     db.db.close()
 
 exports.init = init
