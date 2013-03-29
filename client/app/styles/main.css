@@ -153,24 +153,15 @@ html, body {
 
 
 
+/*
+  tbwo
+*/
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#mapContainer {
+  width: 820px;
+}
 
 .chart {
   background: #fff;
