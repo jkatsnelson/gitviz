@@ -13,10 +13,7 @@
 
   commitSchema = new Schema({
     repo: String,
-    location: Object,
-    contributor: Object,
-    message: String,
-    date: Date
+    commits: Object
   });
 
   Commit = mongoose.model('Commit', commitSchema);
