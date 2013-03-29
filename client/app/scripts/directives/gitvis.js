@@ -3,7 +3,7 @@
 angular.module('githubleagueClientApp')
   .directive('gitvis', function () {
     return {
-      template: '<div id="mapContainer"></div>'
+      template: '<div class="mapContainer"></div>'
         + '<div class="cityRankings">'
         + '<h2>Cities with the most activity:</h2>'
         + '<ol class="cityListing"></ol>'
@@ -13,7 +13,7 @@ angular.module('githubleagueClientApp')
       link: function postLink(scope, element, attrs) {
         // element.text('this is the gitvis directive');
         function draw(ht) {
-          $("#mapContainer").html("<svg id='map' xmlns='http://www.w3.org/2000/svg' width='100%' height='" + ht + "'></svg>");
+          $("#mapContainer").html("<svg class='map' xmlns='http://www.w3.org/2000/svg' width='100%' height='" + ht + "'></svg>");
           var map = d3.select("#map");
           var width = 600;
           var height = ht;

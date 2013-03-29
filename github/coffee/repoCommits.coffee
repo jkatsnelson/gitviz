@@ -14,7 +14,6 @@ userURL = 'https://api.github.com/users/'
 
 fantasyGithub = {}
 
-
 reset = () ->
   fantasyGithub.locations = {}
   fantasyGithub.commits = []
@@ -24,6 +23,7 @@ reset = () ->
   fantasyGithub.currentRequest = null
   fantasyGithub.page = 0
   fantasyGithub.firstCommit = true
+
 init = () ->
   reset()
   eventMaker = new EventEmitter
