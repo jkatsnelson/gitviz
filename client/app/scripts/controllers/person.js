@@ -1,15 +1,20 @@
 'use strict';
 
 angular.module('githubleagueClientApp')
-  .controller('PersonCtrl', function ($scope, $routeParams) {
-    $scope.playerId = $routeParams.playerId;
+  .controller('PersonCtrl', function ($scope, $routeParams, $http) {
+    $scope.repoFound = false;
 
-    $scope.player = {
-      'first': 'Maximus',
-      'middle': 'Decimus',
-      'last': 'Meridius',
-      'team': 'Angularites',
-      'commits': 23,
-      'sloc': 4567
+    $scope.searchForRepo = function(gitUser, gitRepo) {
+
+      $scope.repoFound = false;
+      $scope.findingRepo = true;
+      $http({method: 'GET', url: '/query/' + gitUser + '/repo/' + gitRepo }).
+        success(function(data, status, headers, config) {
+          $scope.findingRepo = false;
+          $scope.repoFound = true;
+        }).
+        error(function(data, status, headers, config) {
+          console.log(status);
+        });
     };
   });
