@@ -1,23 +1,27 @@
 <div class="person-search">
 
-  <div class="navbar navbar-fixed-top">
-    <div class="navbar-inner">
-      <a class="brand" href="#">GitViz</a>
-      <ul class="nav">
-        <li class="active"><a href="#">Home</a></li>
-        <li><a href="#">About Us</a></li>
-        <li><a href="#">Tweet</a></li>
-      </ul>
+    <div ui-if="firstSearch" class="initial-search">
+      <h1>What does your git history look like?
+        <input type="text" class="search-bar" ng-model="gitUser" placeholder="your git name">
+      </h1>
+      <button>back</button>
+      <input type="submit" class="search-button"  ng-click="searchForUser(gitUser)" value="Find out.">
     </div>
-  </div>
 
-  <div class="pull-left">
-    <ul class="breadcrumb">
-      <input type="text" class="pull-left" ng-model="gitUser" placeholder="enter a git user"><span class="divider pull-left">/</span>
-      <input type="text" class="pull-left" ng-model="gitRepo" placeholder="enter a git repo">
-      <input type="submit" class="btn"  ng-click="searchForUser(gitUser)" value="Find User">
-      <input type="submit" class="btn" ng-click="searchForRepo(gitUser, gitRepo)" value="Find Repo">
-    </ul>
+    <div ui-if="beyondFirstSearch" class="nth-search">
+      <button>back</button>
+      <input type="text" class="search-bar" ng-model="gitUser" placeholder="find someone else">
+      <input type="submit" class="search-button"  ng-click="searchForUser(gitUser)" value="Get 'em">
+    </div>
+
+
+
+
+
+
+
+
+
     <div ui-if="repoReady">
       <gitviz></gitviz>
     </div>
@@ -26,18 +30,15 @@
     </div>
     <div ui-if="findingPlayer">
       <p>Git is finding {{gitUser}}</p>
-      <div class="progress progress-striped active">
+<!--       <div class="progress progress-striped active">
         <div class="bar bar-user" style="width: 40%;"></div>
-      </div>
+      </div> -->
     </div>
-    <div ui-if="repoReady">
-      <gitviz></gitviz>
-    </div>
+
     <div ui-if="findingRepo">
       <p>Git is finding {{gitRepo}}</p>
-      <div class="progress progress-striped active">
-        <div class="bar bar-repo" style="width: 40%;"></div>
+<!--       <div class="progress progress-striped active">
+        <div class="bar bar-repo" style="width: 40%;"></div> -->
     </div>
-  </div>
 
 </div>

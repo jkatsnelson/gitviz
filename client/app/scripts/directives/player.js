@@ -3,9 +3,11 @@
 angular.module('githubleagueClientApp')
   .directive('player', function () {
     return {
-      template: '<div class="playerChart">'
-                  + '<button class="showGroup">grouping</button>'
-                  + '<button class="showSeparate">separate</button>'
+      template: '<div class="player-chart">'
+                  + '<div class="chart-buttons">'
+                    + '<button class="showGroup">mash</button>'
+                    + '<button class="showSeparate">pull apart</button>'
+                  + '</div>'
                 + '</div>',
       restrict: 'E',
       link: function postLink(scope, element, attrs) {
@@ -13,19 +15,21 @@ angular.module('githubleagueClientApp')
         var bChart,
             gitData = scope.events;
 
-        $('.playerChart').on('click', function(event) {
+        $('.player-chart').on('click', function(event) {
           var viewType = event.target.className;
           if (viewType === 'showGroup') {
               bChart.display_group_all();
+              bChart.hideEvents();
           }
           if (viewType === 'showSeparate') {
             bChart.displayByAttribute();
+            bChart.showEvents();
           }
         });
 
         function bubbleChart(data) {
           this.data = data;
-          var uniqueEventList = _.unique( _.pluck(data, 'type') );
+          this.uniqueEventList = _.unique( _.pluck(data, 'type') );
           window.eventCounter = {};
           _(data).each(function(event) {
             if (!eventCounter[event.type]) {
@@ -38,27 +42,21 @@ angular.module('githubleagueClientApp')
           var mostEvts = _.max(eventCounter);
           console.log(eventCounter);
           this.width = $(".person-search").width();
-          this.height = 600;
+          this.height = 500;
           this.center = {
             x: this.width / 2,
             y: this.height / 2
           };
           this.attributeCenters = {};
 
-
-                           // d3.scale.linear().domain([20,80]).range([0,120])
-          var widthScale = d3.scale.linear().domain([leastEvts, mostEvts]).range([300, 600]);
-          debugger;
-          for (var i = 0; i < uniqueEventList.length; i++) {
-            var evtType = uniqueEventList[i];
+          // var widthScale = d3.scale.linear().domain([leastEvts, mostEvts]).range([200, 600]);
+          // debugger;
+          for (var i = 0; i < this.uniqueEventList.length; i++) {
+            var evtType = this.uniqueEventList[i];
             var evtCount = eventCounter[evtType];
-            console.log('this is event count', evtCount);
-            debugger;
-            console.log('event type', evtType);
-            console.log('evnt Counter type: ', eventCounter[evtType]);
             this.attributeCenters[evtType] = {
-              x: widthScale(evtCount),
-              // x: (i + 1) * this.width / (uniqueEventList.length),
+              // x: widthScale(evtCount),
+              x: (1+i) * this.width / this.uniqueEventList.length,
               y: this.height / 2
             }
           }
@@ -68,7 +66,7 @@ angular.module('githubleagueClientApp')
           this.nodes = [];
           this.force = null;
           this.circles = null;
-          this.fill_color = d3.scale.ordinal().domain(["nightOwl", "dayTripper"]).range(["#4C3670", "#F28E3D"]);
+          this.fill_color = d3.scale.ordinal().domain(["nightOwl", "dayTripper"]).range(["#381E6B", "#FFF12E"]);
           this.create_nodes();
           this.create_vis();
           return this;
@@ -84,7 +82,7 @@ angular.module('githubleagueClientApp')
             var node;
             node = {
               id: d.creation,
-              radius: 15,
+              radius: 10,
               creation: d.creation,
               persona: d.persona,
               type: d.type,
@@ -97,8 +95,9 @@ angular.module('githubleagueClientApp')
         };
 
         bubbleChart.prototype.create_vis = function() {
+          // debugger;
           var that = this;
-          this.vis = d3.select(".playerChart").append("svg").attr("width", this.width).attr("height", this.height).attr("id", "svg_vis");
+          this.vis = d3.select(".player-chart").append("svg").attr("width", this.width).attr("height", this.height).attr("id", "svg_vis");
           this.circles = this.vis.selectAll("circle").data(this.nodes, function(d) {
             return d.id;
           });
@@ -165,6 +164,42 @@ angular.module('githubleagueClientApp')
             return d.y += (attributeCenterOnScreen.y - d.y) * (that.damper + 0.02) * alpha;
           };
         };
+
+        bubbleChart.prototype.showEvents = function() {
+          var events,
+              eventsData,
+              eventTitleCenters = {};
+
+          for (var i = 0; i < this.uniqueEventList.length; i++) {
+            var evtType = this.uniqueEventList[i];
+            var evtCount = eventCounter[evtType];
+            eventTitleCenters[evtType] = {
+              x: (1+i) * this.width / this.uniqueEventList.length,
+            }
+          }
+
+          // console.log('event titleCenters: ', eventTitleCenters);
+          eventsData = d3.keys(eventTitleCenters);
+          // console.log('eventsData: ', eventsData);
+          events = this.vis.selectAll(".events").data(eventsData);
+          return events.enter().append("text")
+                              .attr("class", "events")
+                              .attr("x", function(d) {
+                                // debugger;
+                                return eventTitleCenters[d].x;
+                              })
+                              .attr("y", 40)
+                              .attr("text-anchor", "start")
+                              .text(function(d) {
+                                return d;
+                              });
+        };
+
+        bubbleChart.prototype.hideEvents = function() {
+          console.log('fired hide');
+          var events;
+          return events = this.vis.selectAll('.events').remove();
+        }
 
         bChart = new bubbleChart(gitData);
         bChart.start();
