@@ -1,5 +1,5 @@
 (function() {
-  var EventEmitter, UserEvent, auth, db, events, eventsURL, get, httpLink, init, nextPage, request, rootURL, saveEvents, _;
+  var EventEmitter, UserEvent, auth, db, events, eventsURL, get, httpLink, init, nextPage, request, rootURL, saveEvents, user, _;
 
   request = require('request');
 
@@ -23,10 +23,14 @@
 
   events = [];
 
+  user = null;
+
   init = function() {
     var eventMaker;
 
     events = [];
+    nextPage = null;
+    user = null;
     eventMaker = new EventEmitter;
     eventMaker.init = init;
     eventMaker.get = get;
@@ -36,6 +40,7 @@
   get = function(user) {
     var that, url;
 
+    user = user;
     that = this;
     url = rootURL + user + eventsURL + auth;
     if (nextPage) {
