@@ -1,5 +1,5 @@
 (function() {
-  var EventEmitter, UserEvent, auth, db, events, eventsURL, get, httpLink, init, nextPage, num, request, rootURL, saveEvents, user, _;
+  var EventEmitter, UserEvent, auth, db, events, eventsURL, get, httpLink, init, nextPage, request, rootURL, saveEvents, _;
 
   request = require('request');
 
@@ -13,8 +13,6 @@
 
   UserEvent = db.UserEvent;
 
-  user = 'jkatsnelson';
-
   rootURL = 'https://api.github.com/users/';
 
   eventsURL = '/events/public';
@@ -24,8 +22,6 @@
   nextPage = null;
 
   events = [];
-
-  num = 0;
 
   init = function() {
     var eventMaker;

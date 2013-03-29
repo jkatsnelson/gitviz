@@ -6,13 +6,11 @@ EventEmitter = require('events').EventEmitter
 
 UserEvent = db.UserEvent
 
-user = 'jkatsnelson'
 rootURL = 'https://api.github.com/users/'
 eventsURL = '/events/public'
 auth = '?client_id=2bf1c804756e95d43bec&client_secret=16516757e1d87c3f13802448685375ee04674105'
 nextPage = null
 events = []
-num = 0
 
 init = () ->
   events = []
