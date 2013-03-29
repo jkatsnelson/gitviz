@@ -5,7 +5,8 @@ path = require 'path'
 userEvents = require __dirname + '/../../github/js/userEvents.js'
 commits = require __dirname + '/../../github/js/repoCommits.js'
 app = express()
-
+db = require __dirname + '/../../server/js/db.js'
+# app locals
 app.configure () ->
   app.pwd = path.dirname module.uri
   app.set 'port', process.env.PORT || 3000
@@ -28,10 +29,13 @@ app.get '/query/:user', (req, res) ->
   userEvents.get req.params.user
 
 app.get '/query/:user/repo/:repo', (req, res) ->
-
-  commits.find.on 'commits', (commits) ->
-    res.send commits
-  commits.find.get req.params.user, req.params.repo
+  commits = commits.init()
+  res.write '['
+  commits.on 'commit', (commit) ->
+    res.write commit
+  commits.on 'end', () ->
+    res.end ']'
+  commits.get req.params.user, req.params.repo
 
 app.listen 3000
 

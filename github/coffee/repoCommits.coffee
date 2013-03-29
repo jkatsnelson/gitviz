@@ -1,7 +1,7 @@
 request = require 'request'
 db = require __dirname + '/../../server/js/db.js'
-gm = require("googlemaps")
-fs = require("fs")
+gm = require 'googlemaps'
+fs = require 'fs'
 httpLink = require 'http-link'
 _ = require 'underscore'
 EventEmitter = require('events').EventEmitter
@@ -12,16 +12,32 @@ auth = '?client_id=2bf1c804756e95d43bec&client_secret=16516757e1d87c3f1380244868
 repoURL = 'https://api.github.com/repos/'
 userURL = 'https://api.github.com/users/'
 locations = {}
+commits = []
 nextPage = null
 repoName = null
 repoAuthor = null
-findCommits = new EventEmitter
+that = null
+page = 0
+firstCommit = true
 
-findCommits.get = (author, repo) ->
+init = () ->
+  locations = {}
+  commits = []
+  nextPage = null
+  that = null
+  page = 0
+  firstCommit = true
+  eventMaker = new EventEmitter
+  eventMaker.init = init
+  eventMaker.get = get
+  return eventMaker
+
+get = (author, repo) ->
+  that = @
   if author
     repoAuthor = author
     repoName = repo
-    url = repoURL + author + '/' + repo + '/commits'
+    url = repoURL + repoAuthor + '/' + repoName + '/commits' + auth
   if nextPage then url = nextPage
   request.get url, (err, res, body) ->
     throw err if err
@@ -29,9 +45,10 @@ findCommits.get = (author, repo) ->
     commitList = JSON.parse body
     unless res.headers.link
       return traverseList commitList
-    links = httpLink.parse res.headers.link
-    _.each links, (link) ->
-      if link.rel is 'next' then nextPage = link.href
+    _(httpLink.parse res.headers.link).each (link) ->
+      if link.rel is 'next'
+        nextPage = link.href
+        console.log page++
       else return
     traverseList commitList
 
@@ -40,13 +57,12 @@ traverseList = (commitList) ->
     unless commitList[0].author
       commitList[0].author = login: 'not specified'
     contributor = commitList[0].author.login
-    if locations[contributor] then saveCommit commitList.shift(), commitList
+    if locations[contributor] then pushCommit commitList.shift(), commitList
     else fetchLocation contributor, commitList
   else
-    if nextPage then findCommits.get()
+    if nextPage then that.get()
     else
-      findCommits.emit 'commits', 'done'
-      db.db.close()
+      saveCommits commits
 
 fetchLocation = (contributor, commitList) ->
   request.get userURL + contributor + auth, (err, res, body) ->
@@ -64,18 +80,32 @@ fetchLocation = (contributor, commitList) ->
           lat: data.results[0].geometry.location.lat
           lon: data.results[0].geometry.location.lng
       else locations[contributor] = city: user.location
-      console.log locations[contributor]
       traverseList commitList
 
-saveCommit = (commit, commitList) ->
-  newCommit = new Commit
+pushCommit = (commit, commitList) ->
+  newCommit =
     repo: repoAuthor + '/' + repoName
     contributor: commit.author.login
     message: commit.commit.message
     date: commit.commit.author.date
     location : locations[commit.author.login]
+  commits.push newCommit
+  if firstCommit
+    commit = JSON.stringify newCommit
+  else
+    commit = ',' + JSON.stringify newCommit
+  that.emit 'commit', commit
+  firstCommit = false
+  traverseList commitList
+
+saveCommits = (commits) ->
+  that.emit 'end', 'done!'
+  newCommit = new Commit
+    repo: repoAuthor + '/' + repoName
+    commits: commits
   newCommit.save (err) ->
     throw err if err
-    traverseList commitList
+    console.log 'saved '+ repoAuthor + '/' + repoName
+    db.db.close()
 
-exports.find = findCommits
+exports.init = init
