@@ -6,6 +6,10 @@ body {
   padding: 40px;
 }
 
+#mapContainer {
+  width: 820px;
+}
+
 .chart {
   background: #fff;
   border: solid 1px #ddd;

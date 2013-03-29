@@ -3,7 +3,11 @@
 angular.module('githubleagueClientApp')
   .directive('gitvis', function () {
     return {
-      template: "<div id='mapContainer'></div>",
+      template: '<div id="mapContainer"></div>'
+        + '<div class="cityRankings">'
+        + '<h2>Cities with the most activity:</h2>'
+        + '<ol class="cityListing"></ol>'
+        + '</div>',
       restrict: 'E',
       val: '=',
       link: function postLink(scope, element, attrs) {
@@ -26,93 +30,82 @@ angular.module('githubleagueClientApp')
           d3.json('../geodata/world-map.json', function(collection) {
             map.selectAll('path').data(collection.features).enter()
               .append('path')
-              .attr('d', path)
-              .attr('fill', "gray")
-              .attr("width", width)
-              .attr("height", width/2)
+            .attr('d', path)
+            .attr('fill', "gray")
+            .attr("width", width)
+            .attr("height", width/2)
 
-            var dataset = locations;
-            for (var i = 0; i < dataset.length; i++) {
-              if ((!dataset[i].lat) || (!dataset[i].lon)) {
-                console.log('removing', dataset[i]);
-                dataset.splice(i,1);
-              }
+          var dataset = locations;
+          // remove locations without valid data
+          for (var i = 0; i < dataset.length; i++) {
+            if ((!dataset[i].lat) || (!dataset[i].lon)) {
+              dataset.splice(i,1);
             }
+          }
 
-            map.selectAll('circle')
-               .data(dataset)
-               .enter()
-               .append('circle')
-               .transition().ease("linear")
-               .attr('cx', width/2)
-               .duration()
-               .transition().ease("linear")
-               .delay(function(d,i) { return (i+1) * tick; })
-               .duration(function(d, i) { return tick; })
-               .attr('cx', function(d) {
-                 return projection([d.lon, d.lat])[0]; //projection(d.lon, d.lat)[0];
-               })
-               .attr('cy', function(d) {
-                 return projection([d.lon, d.lat])[1]; //projection(d.lon, d.lat)[1];
-               })
-               .attr('r', function(d) {
-                 return 3;
-               })
-               .attr('city', function(d) {
-                  return d.city;
-               })
-               .duration(function (d,i) { return tick; })
-               .transition().ease("linear")
-               .delay(function(d, i) { return (i+2) * tick - 10; })
-               .duration()
-               .attr('fill', 'red')
-               .attr('r', 6)
-               .transition().ease("linear")
-               .delay(function(d, i) { return (i+2) * tick + 30; })
-               .attr('fill', 'black')
-               .attr('r', 3)
+          map.selectAll('circle')
+             .data(dataset)
+             .enter()
+             .append('circle')
+             .transition().ease("linear")
+             .attr('cx', width/2)
+             .duration()
+             .transition().ease("linear")
+             .delay(function(d,i) { return (i+1) * tick; })
+             .duration(function(d, i) { return tick; })
+             .attr('cx', function(d) {
+               return projection([d.lon, d.lat])[0]; //projection(d.lon, d.lat)[0];
+             })
+             .attr('cy', function(d) {
+               return projection([d.lon, d.lat])[1]; //projection(d.lon, d.lat)[1];
+             })
+             .attr('r', function(d) {
+               return 3;
+             })
+             .attr('city', function(d) {
+                return d.city;
+             })
+             .duration(function (d,i) { return tick; })
+             .transition().ease("linear")
+             .delay(function(d, i) { return (i+2) * tick - 10; })
+             .duration()
+             .attr('fill', 'red')
+             .attr('r', 6)
+             .transition().ease("linear")
+             .delay(function(d, i) { return (i+2) * tick + 30; })
+             .attr('fill', 'black')
+             .attr('r', 3)
 
-            map.selectAll("text")
-              .data(dataset)
-              .enter()
-              .append("text")
-              .transition()
-              .attr('x', 605)
-              .attr('y', 100)
-              .transition().ease("linear")
-              .delay(function(d,i) { return (i) * tick; })
-              .transition()
-              .delay(function(d, i) { return (i + 1) * tick; })
-              .duration(5000)
-              .text(function(d, i) { return d.city; })
-              .attr("x", 605)
-              .attr("y", 360)
-              .attr("font-size", "14px")
-              .attr("font-family", 'Arial')
-              .attr("fill", "black")
-              // .transition()
-              // .delay(function(d, i) { return (i+1) * 10; })
-              .remove()
-              .alert("done")
+          map.selectAll("text")
+            .data(dataset)
+            .enter()
+            .append("text")
+            .transition()
+            .attr('x', 605)
+            .attr('y', 100)
+            .transition().ease("linear")
+            .delay(function(d,i) { return (i) * tick; })
+            .transition()
+            .delay(function(d, i) { return (i + 1) * tick; })
+            .duration(5000)
+            .text(function(d, i) { return d.city; })
+            .attr("x", 605)
+            .attr("y", 360)
+            .attr("font-size", "14px")
+            .attr("font-family", 'Arial')
+            .attr("fill", "black")
+            .remove()
 
-
-
-
-            // map.selectAll("text")
-            //   .data(dataset)
-            //   .enter()
-            //   .append("text")
-            //   .attr('x', 605)
-            //   .attr('y', 300)
-            //   .attr("font-size", "14px")
-            //   .attr("font-family", 'Arial')
-            //   .attr("fill", "black")
-            //   .text("complete")
-
+            // Display top ten cities by frequency
+            var cityCounts = _(dataset).chain().countBy('city').pairs()
+              .sort(function(a,b) { return a[1] < b[1];})
+              .value()
+            for (var i = 0; i < cityCounts.length && i < 10; i++) {
+              $('.cityListing').append('<li>'+cityCounts[i][0]+': '+cityCounts[i][1]);
+            }
           });
         }
         draw($("#mapContainer").width()/2);
-
       }
     };
   });
