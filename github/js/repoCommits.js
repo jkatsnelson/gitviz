@@ -1,13 +1,13 @@
 (function() {
-  var Commit, EventEmitter, auth, db, fetchLocation, findCommits, fs, gm, httpLink, locations, nextPage, repoAuthor, repoName, repoURL, request, saveCommit, traverseList, userURL, _;
+  var Commit, EventEmitter, auth, db, fantasyGithub, fetchLocation, fs, get, gm, httpLink, init, pushCommit, repoURL, request, reset, saveCommits, traverseList, userURL, _;
 
   request = require('request');
 
   db = require(__dirname + '/../../server/js/db.js');
 
-  gm = require("googlemaps");
+  gm = require('googlemaps');
 
-  fs = require("fs");
+  fs = require('fs');
 
   httpLink = require('http-link');
 
@@ -23,42 +23,56 @@
 
   userURL = 'https://api.github.com/users/';
 
-  locations = {};
+  fantasyGithub = {};
 
-  nextPage = null;
+  reset = function() {
+    fantasyGithub.locations = {};
+    fantasyGithub.commits = [];
+    fantasyGithub.nextPage = null;
+    fantasyGithub.repoName = null;
+    fantasyGithub.repoAuthor = null;
+    fantasyGithub.currentRequest = null;
+    fantasyGithub.page = 0;
+    return fantasyGithub.firstCommit = true;
+  };
 
-  repoName = null;
+  init = function() {
+    var eventMaker;
 
-  repoAuthor = null;
+    reset();
+    eventMaker = new EventEmitter;
+    eventMaker.init = init;
+    eventMaker.get = get;
+    return eventMaker;
+  };
 
-  findCommits = new EventEmitter;
-
-  findCommits.get = function(author, repo) {
+  get = function(author, repo) {
     var url;
 
+    fantasyGithub.currentRequest = this;
     if (author) {
-      repoAuthor = author;
-      repoName = repo;
-      url = repoURL + author + '/' + repo + '/commits';
+      fantasyGithub.repoAuthor = author;
+      fantasyGithub.repoName = repo;
+      url = repoURL + author + '/' + repo + '/commits' + auth;
     }
-    if (nextPage) {
-      url = nextPage;
+    if (fantasyGithub.nextPage) {
+      url = fantasyGithub.nextPage;
     }
     return request.get(url, function(err, res, body) {
-      var commitList, links;
+      var commitList;
 
       if (err) {
         throw err;
       }
-      nextPage = null;
+      fantasyGithub.nextPage = null;
       commitList = JSON.parse(body);
       if (!res.headers.link) {
         return traverseList(commitList);
       }
-      links = httpLink.parse(res.headers.link);
-      _.each(links, function(link) {
+      _(httpLink.parse(res.headers.link)).each(function(link) {
         if (link.rel === 'next') {
-          return nextPage = link.href;
+          fantasyGithub.nextPage = link.href;
+          return console.log(fantasyGithub.page++);
         } else {
 
         }
@@ -77,17 +91,16 @@
         };
       }
       contributor = commitList[0].author.login;
-      if (locations[contributor]) {
-        return saveCommit(commitList.shift(), commitList);
+      if (fantasyGithub.locations.contributor) {
+        return pushCommit(commitList.shift(), commitList);
       } else {
         return fetchLocation(contributor, commitList);
       }
     } else {
-      if (nextPage) {
-        return findCommits.get();
+      if (fantasyGithub.nextPage) {
+        return fantasyGithub.currentRequest.get();
       } else {
-        findCommits.emit('commits', 'done');
-        return db.db.close();
+        return saveCommits(fantasyGithub.commits);
       }
     }
   };
@@ -108,7 +121,7 @@
           throw err;
         }
         if (data.status === "OK") {
-          locations[contributor] = {
+          fantasyGithub.locations.contributor = {
             userInput: user.location,
             city: data.results[0].formatted_address,
             lat: data.results[0].geometry.location.lat,
@@ -119,30 +132,49 @@
             city: user.location
           };
         }
-        console.log(locations[contributor]);
         return traverseList(commitList);
       });
     });
   };
 
-  saveCommit = function(commit, commitList) {
+  pushCommit = function(commit, commitList) {
     var newCommit;
 
-    newCommit = new Commit({
-      repo: repoAuthor + '/' + repoName,
+    newCommit = {
+      repo: fantasyGithub.repoAuthor + '/' + fantasyGithub.repoName,
       contributor: commit.author.login,
       message: commit.commit.message,
       date: commit.commit.author.date,
-      location: locations[commit.author.login]
+      location: fantasyGithub.locations[commit.author.login]
+    };
+    fantasyGithub.commits.push(newCommit);
+    if (fantasyGithub.firstCommit) {
+      commit = JSON.stringify(newCommit);
+    } else {
+      commit = ',' + JSON.stringify(newCommit);
+    }
+    fantasyGithub.currentRequest.emit('commit', commit);
+    fantasyGithub.firstCommit = false;
+    return traverseList(commitList);
+  };
+
+  saveCommits = function(commits) {
+    var newCommit;
+
+    fantasyGithub.currentRequest.emit('end', 'done!');
+    newCommit = new Commit({
+      repo: fantasyGithub.repoAuthor + '/' + fantasyGithub.repoName,
+      commits: commits
     });
     return newCommit.save(function(err) {
       if (err) {
         throw err;
       }
-      return traverseList(commitList);
+      console.log('saved ' + fantasyGithub.repoAuthor + '/' + fantasyGithub.repoName);
+      return db.db.close();
     });
   };
 
-  exports.find = findCommits;
+  exports.init = init;
 
 }).call(this);

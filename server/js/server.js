@@ -1,5 +1,5 @@
 (function() {
-  var app, commits, express, http, path, routes, userEvents;
+  var app, commits, db, express, http, path, routes, userEvents;
 
   express = require('express');
 
@@ -14,6 +14,8 @@
   commits = require(__dirname + '/../../github/js/repoCommits.js');
 
   app = express();
+
+  db = require(__dirname + '/../../server/js/db.js');
 
   app.configure(function() {
     app.pwd = path.dirname(module.uri);
@@ -40,10 +42,29 @@
   });
 
   app.get('/query/:user/repo/:repo', function(req, res) {
-    commits.find.on('commits', function(commits) {
-      return res.send(commits);
+    var repoRoute;
+
+    repoRoute = req.params.user + '/' + req.params.repo;
+    return db.Commit.findOne({
+      'repo': repoRoute
+    }, 'commits', function(err, commitList) {
+      if (err) {
+        throw err;
+      }
+      if (commitList) {
+        return res.send(commitList);
+      } else {
+        commits = commits.init();
+        res.write('[');
+        commits.on('commit', function(commit) {
+          return res.write(commit);
+        });
+        commits.on('end', function() {
+          return res.end(']');
+        });
+        return commits.get(req.params.user, req.params.repo);
+      }
     });
-    return commits.find.get(req.params.user, req.params.repo);
   });
 
   app.listen(3000);

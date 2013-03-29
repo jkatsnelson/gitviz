@@ -30,7 +30,7 @@ angular.module('githubleagueClientApp')
         var newTime = new Date(timeStamp);
         if (newTime.getUTCHours() >= 6 && newTime.getUTCHours() <= 17) {
           obj['persona'] = 'dayTripper';
-        } else {
+        } else {;
           obj['persona'] = 'nightOwl';
         }
       });
@@ -53,6 +53,7 @@ angular.module('githubleagueClientApp')
     };
 
     $scope.searchForRepo = function(gitUser, gitRepo) {
+      $scope.repoReady = false;
       $scope.findingRepo = true;
       $http({method: 'GET', url: '/query/' + gitUser + '/repo/' + gitRepo }).
         success(function(data, status, headers, config) {
