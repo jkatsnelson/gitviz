@@ -11,8 +11,9 @@ angular.module('githubleagueClientApp')
         function draw(ht) {
           $("#mapContainer").html("<svg id='map' xmlns='http://www.w3.org/2000/svg' width='100%' height='" + ht + "'></svg>");
           var map = d3.select("#map");
-          var width = $("#map").parent().width();
+          var width = 600;
           var height = ht;
+          var tick = 250;
 
           // I discovered that the unscaled equirectangular map is 640x360. Thus, we
           // should scale our map accordingly. Depending on the width ratio of the new
@@ -46,8 +47,8 @@ angular.module('githubleagueClientApp')
                .attr('cx', width/2)
                .duration()
                .transition().ease("linear")
-               .delay(function(d,i) { return (i+1) * 150; })
-               .duration(function(d, i) { return 150; })
+               .delay(function(d,i) { return (i+1) * tick; })
+               .duration(function(d, i) { return tick; })
                .attr('cx', function(d) {
                  return projection([d.lon, d.lat])[0]; //projection(d.lon, d.lat)[0];
                })
@@ -60,16 +61,53 @@ angular.module('githubleagueClientApp')
                .attr('city', function(d) {
                   return d.city;
                })
-               .duration(function (d,i) { return 150; })
+               .duration(function (d,i) { return tick; })
                .transition().ease("linear")
-               .delay(function(d, i) { return (i+2) * 150 - 10; })
+               .delay(function(d, i) { return (i+2) * tick - 10; })
                .duration()
                .attr('fill', 'red')
                .attr('r', 6)
                .transition().ease("linear")
-               .delay(function(d, i) { return (i+2) * 150 + 30; })
+               .delay(function(d, i) { return (i+2) * tick + 30; })
                .attr('fill', 'black')
                .attr('r', 3)
+
+            map.selectAll("text")
+              .data(dataset)
+              .enter()
+              .append("text")
+              .transition()
+              .attr('x', 605)
+              .attr('y', 100)
+              .transition().ease("linear")
+              .delay(function(d,i) { return (i) * tick; })
+              .transition()
+              .delay(function(d, i) { return (i + 1) * tick; })
+              .duration(5000)
+              .text(function(d, i) { return d.city; })
+              .attr("x", 605)
+              .attr("y", 360)
+              .attr("font-size", "14px")
+              .attr("font-family", 'Arial')
+              .attr("fill", "black")
+              // .transition()
+              // .delay(function(d, i) { return (i+1) * 10; })
+              .remove()
+              .alert("done")
+
+
+
+
+            // map.selectAll("text")
+            //   .data(dataset)
+            //   .enter()
+            //   .append("text")
+            //   .attr('x', 605)
+            //   .attr('y', 300)
+            //   .attr("font-size", "14px")
+            //   .attr("font-family", 'Arial')
+            //   .attr("fill", "black")
+            //   .text("complete")
 
           });
         }

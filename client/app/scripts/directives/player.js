@@ -26,39 +26,42 @@ angular.module('githubleagueClientApp')
         function bubbleChart(data) {
           this.data = data;
           var uniqueEventList = _.unique( _.pluck(data, 'type') );
-          // var eventCounts = _(data).each(function(event) {
-          //   var counter = {};
-          //   if (!counter[event.type]) {
-          //     counter[event.type] = 1;
-          //   } else {
-          //     counter[event.type]++
-          //   }
-          // });
-          this.width = $(".container").width();
+          window.eventCounter = {};
+          _(data).each(function(event) {
+            if (!eventCounter[event.type]) {
+              eventCounter[event.type] = 1;
+            } else {
+              eventCounter[event.type]++
+            }
+          });
+          var leastEvts = _.min(eventCounter);
+          var mostEvts = _.max(eventCounter);
+          console.log(eventCounter);
+          this.width = $(".person-search").width();
           this.height = 600;
           this.center = {
             x: this.width / 2,
             y: this.height / 2
           };
           this.attributeCenters = {};
-          console.log(uniqueEventList);
-          // debugger;
+
+
+                           // d3.scale.linear().domain([20,80]).range([0,120])
+          var widthScale = d3.scale.linear().domain([leastEvts, mostEvts]).range([300, 600]);
+          debugger;
           for (var i = 0; i < uniqueEventList.length; i++) {
-            this.attributeCenters[uniqueEventList[i]] = {
-              x: (i + 1) * this.width / uniqueEventList.length + 1,
+            var evtType = uniqueEventList[i];
+            var evtCount = eventCounter[evtType];
+            console.log('this is event count', evtCount);
+            debugger;
+            console.log('event type', evtType);
+            console.log('evnt Counter type: ', eventCounter[evtType]);
+            this.attributeCenters[evtType] = {
+              x: widthScale(evtCount),
+              // x: (i + 1) * this.width / (uniqueEventList.length),
               y: this.height / 2
             }
           }
-          // this.attributeCenters = {
-          //   "nightOwl": {
-          //     x: this.width / 3,
-          //     y: this.height / 2
-          //   },
-          //   "dayTripper": {
-          //     x: 2 * this.width / 3,
-          //     y: this.height / 2
-          //   }
-          // };
           this.layout_gravity = -0.01;
           this.damper = 0.1;
           this.vis = null;
