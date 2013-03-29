@@ -1,13 +1,13 @@
 (function() {
-  var Commit, EventEmitter, auth, db, fetchLocation, findCommits, fs, gm, httpLink, locations, nextPage, repoAuthor, repoName, repoURL, request, saveCommit, traverseList, userURL, _;
+  var Commit, EventEmitter, auth, commits, db, fetchLocation, firstCommit, fs, get, gm, httpLink, init, locations, nextPage, page, pushCommit, repoAuthor, repoName, repoURL, request, saveCommits, that, traverseList, userURL, _;
 
   request = require('request');
 
   db = require(__dirname + '/../../server/js/db.js');
 
-  gm = require("googlemaps");
+  gm = require('googlemaps');
 
-  fs = require("fs");
+  fs = require('fs');
 
   httpLink = require('http-link');
 
@@ -25,27 +25,49 @@
 
   locations = {};
 
+  commits = [];
+
   nextPage = null;
 
   repoName = null;
 
   repoAuthor = null;
 
-  findCommits = new EventEmitter;
+  that = null;
 
-  findCommits.get = function(author, repo) {
+  page = 0;
+
+  firstCommit = true;
+
+  init = function() {
+    var eventMaker;
+
+    locations = {};
+    commits = [];
+    nextPage = null;
+    that = null;
+    page = 0;
+    firstCommit = true;
+    eventMaker = new EventEmitter;
+    eventMaker.init = init;
+    eventMaker.get = get;
+    return eventMaker;
+  };
+
+  get = function(author, repo) {
     var url;
 
+    that = this;
     if (author) {
       repoAuthor = author;
       repoName = repo;
-      url = repoURL + author + '/' + repo + '/commits';
+      url = repoURL + repoAuthor + '/' + repoName + '/commits' + auth;
     }
     if (nextPage) {
       url = nextPage;
     }
     return request.get(url, function(err, res, body) {
-      var commitList, links;
+      var commitList;
 
       if (err) {
         throw err;
@@ -55,10 +77,10 @@
       if (!res.headers.link) {
         return traverseList(commitList);
       }
-      links = httpLink.parse(res.headers.link);
-      _.each(links, function(link) {
+      _(httpLink.parse(res.headers.link)).each(function(link) {
         if (link.rel === 'next') {
-          return nextPage = link.href;
+          nextPage = link.href;
+          return console.log(page++);
         } else {
 
         }
@@ -78,16 +100,15 @@
       }
       contributor = commitList[0].author.login;
       if (locations[contributor]) {
-        return saveCommit(commitList.shift(), commitList);
+        return pushCommit(commitList.shift(), commitList);
       } else {
         return fetchLocation(contributor, commitList);
       }
     } else {
       if (nextPage) {
-        return findCommits.get();
+        return that.get();
       } else {
-        findCommits.emit('commits', 'done');
-        return db.db.close();
+        return saveCommits(commits);
       }
     }
   };
@@ -119,30 +140,49 @@
             city: user.location
           };
         }
-        console.log(locations[contributor]);
         return traverseList(commitList);
       });
     });
   };
 
-  saveCommit = function(commit, commitList) {
+  pushCommit = function(commit, commitList) {
     var newCommit;
 
-    newCommit = new Commit({
+    newCommit = {
       repo: repoAuthor + '/' + repoName,
       contributor: commit.author.login,
       message: commit.commit.message,
       date: commit.commit.author.date,
       location: locations[commit.author.login]
+    };
+    commits.push(newCommit);
+    if (firstCommit) {
+      commit = JSON.stringify(newCommit);
+    } else {
+      commit = ',' + JSON.stringify(newCommit);
+    }
+    that.emit('commit', commit);
+    firstCommit = false;
+    return traverseList(commitList);
+  };
+
+  saveCommits = function(commits) {
+    var newCommit;
+
+    that.emit('end', 'done!');
+    newCommit = new Commit({
+      repo: repoAuthor + '/' + repoName,
+      commits: commits
     });
     return newCommit.save(function(err) {
       if (err) {
         throw err;
       }
-      return traverseList(commitList);
+      console.log('saved ' + repoAuthor + '/' + repoName);
+      return db.db.close();
     });
   };
 
-  exports.find = findCommits;
+  exports.init = init;
 
 }).call(this);
