@@ -88,11 +88,11 @@ pushCommit = (commit, commitList) ->
     message: commit.commit.message
     date: commit.commit.author.date
     location : fantasyGithub.locations[commit.author.login]
-  fantasyGithub.commits.push newCommit
+  fantasyGithub.commits.push commit.location
   if fantasyGithub.firstCommit
-    commit = JSON.stringify newCommit
+    commit = JSON.stringify commit.location
   else
-    commit = ',' + JSON.stringify newCommit
+    commit = ',' + JSON.stringify commit.location
   fantasyGithub.currentRequest.emit 'commit', commit
   fantasyGithub.firstCommit = false
   traverseList commitList
