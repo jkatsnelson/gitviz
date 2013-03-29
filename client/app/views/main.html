@@ -1,8 +1,23 @@
-<div class="hero-unit">
+<!-- <div class="hero-unit">
   <h1>App Home</h1>
   <hr>
   <a href="#/people">Visualize Git Users</a>
   <hr>
   <a href="#/repos">Visualize Popular Repos</a>
+  <gitvis val="data"></gitvis>
+</div> -->
+
+<a href="#/people">go to git users</a>
+
+<div class="initial-search">
+  <h1>Repo search
+    <input type="text" class="search-bar" ng-model="gitUser" placeholder="mbostock">
+    <input type="text" class="search-bar" ng-model="gitRepo" placeholder="d3">
+  </h1>
+  <button>back</button>
+  <input type="submit" class="search-button"  ng-click="searchForRepo(gitUser, gitRepo)" value="Find out.">
+</div>
+
+<div ui-if="repoFound">
   <gitvis val="data"></gitvis>
 </div>

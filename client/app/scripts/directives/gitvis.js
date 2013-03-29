@@ -35,7 +35,7 @@ angular.module('githubleagueClientApp')
             .attr("width", width)
             .attr("height", width/2)
 
-          var dataset = locations;
+          var dataset = scope.repoHistory;
           // remove locations without valid data
           for (var i = 0; i < dataset.length; i++) {
             if ((!dataset[i].lat) || (!dataset[i].lon)) {
