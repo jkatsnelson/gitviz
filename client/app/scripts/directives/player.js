@@ -40,7 +40,7 @@ angular.module('githubleagueClientApp')
           });
           var leastEvts = _.min(eventCounter);
           var mostEvts = _.max(eventCounter);
-          console.log(eventCounter);
+          // console.log(eventCounter);
           this.width = $(".person-search").width();
           this.height = 500;
           this.center = {
@@ -82,7 +82,7 @@ angular.module('githubleagueClientApp')
             var node;
             node = {
               id: d.creation,
-              radius: 10,
+              radius: 9,
               creation: d.creation,
               persona: d.persona,
               type: d.type,
