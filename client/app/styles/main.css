@@ -2,9 +2,175 @@
 html, body {
   background-color: #FFF;
 }
-body {
-  padding: 40px;
+
+/*
+  person search
+*/
+
+.person-search {
+  width: 940px;
+  height: 800px;
+  background-color: white;
+  color: gray;
 }
+
+.person-search span.red {
+  color: red;
+}
+
+/*
+  initial search area
+*/
+
+.initial-search {
+  width: 500px;
+  margin: 0 auto;
+  padding: 33px 0 33px 0;
+}
+
+.initial-search h1 {
+  line-height: 70px;
+}
+
+.initial-search input[type="text"] {
+  font-size: 30px;
+  padding: 20px;
+  line-height: 30px;
+  text-align: center;
+  width: 225px;
+  margin-left: 11px;
+  margin-top: 11px;
+  margin-bottom: 22px;
+}
+
+.initial-search button {
+  padding: 22px;
+  width: 170px;
+  font-size: 36px;
+  font-weight: bold;
+  color: white;
+  background-color: #E8E8E8;
+  border-style: none;
+}
+
+.initial-search input[type="submit"] {
+  padding: 22px;
+  margin-left: 11px;
+  width: 270px;
+  font-size: 36px;
+  font-weight: bold;
+  color: white;
+  background-color: red;
+  border-style: none;
+}
+
+/*
+  secondary search area
+*/
+
+.nth-search {
+  width: 840px;
+  margin: 0 auto;
+  padding: 33px 0 33px 0;
+}
+
+.nth-search input[type="text"] {
+  font-size: 30px;
+  padding: 20px;
+  line-height: 30px;
+  text-align: center;
+  width: 430px;
+  margin-top: 9px;
+}
+
+.nth-search button {
+  padding: 22px;
+  width: 170px;
+  font-size: 36px;
+  font-weight: bold;
+  color: rgb(226, 226, 226);
+  background-color: white;
+  border-style: none;
+}
+
+.nth-search input[type="submit"] {
+  padding: 22px;
+  margin-left: 11px;
+  width: 170px;
+  font-size: 36px;
+  font-weight: bold;
+  color: white;
+  background-color: red;
+  border-style: none;
+  /*display: none;*/
+}
+
+/*
+  User Github d3
+*/
+
+.player-chart {
+  width: 100%;
+}
+
+.chart-buttons {
+  width: 500px;
+  margin: 0 auto;
+}
+
+.chart-buttons button.showGroup {
+  padding: 22px;
+  width: 45%;
+  font-size: 36px;
+  font-weight: bold;
+  color: white;
+  background-color: #E8E8E8;
+  border-style: none;
+}
+
+.chart-buttons button.showSeparate {
+  padding: 22px;
+  margin-left: 5%;
+  width: 45%;
+  font-size: 36px;
+  font-weight: bold;
+  color: white;
+  background-color: #E8E8E8;
+  border-style: none;
+}
+
+.events {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 18px;
+  line-height: 22px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 .chart {
   background: #fff;
