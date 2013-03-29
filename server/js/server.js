@@ -42,15 +42,29 @@
   });
 
   app.get('/query/:user/repo/:repo', function(req, res) {
-    commits = commits.init();
-    res.write('[');
-    commits.on('commit', function(commit) {
-      return res.write(commit);
+    var repoRoute;
+
+    repoRoute = req.params.user + '/' + req.params.repo;
+    return db.Commit.findOne({
+      'repo': repoRoute
+    }, 'commits', function(err, commitList) {
+      if (err) {
+        throw err;
+      }
+      if (commitList) {
+        return res.send(commitList);
+      } else {
+        commits = commits.init();
+        res.write('[');
+        commits.on('commit', function(commit) {
+          return res.write(commit);
+        });
+        commits.on('end', function() {
+          return res.end(']');
+        });
+        return commits.get(req.params.user, req.params.repo);
+      }
     });
-    commits.on('end', function() {
-      return res.end(']');
-    });
-    return commits.get(req.params.user, req.params.repo);
   });
 
   app.listen(3000);
