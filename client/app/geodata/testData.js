@@ -1,4 +1,3 @@
-// console.log("asdf")
 var locations = [ { lon: -87.6297982,
     lat: 41.8781136,
     city: 'Chicago, IL, USA',
