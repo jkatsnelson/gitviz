@@ -1,5 +1,5 @@
 (function() {
-  var app, commits, db, express, http, path, routes, userEvents;
+  var app, db, express, getCommits, http, path, routes, userEvents;
 
   express = require('express');
 
@@ -11,11 +11,11 @@
 
   userEvents = require(__dirname + '/../../github/js/userEvents.js');
 
-  commits = require(__dirname + '/../../github/js/repoCommits.js');
-
-  app = express();
+  getCommits = require(__dirname + '/../../github/js/repoCommits.js');
 
   db = require(__dirname + '/../../server/js/db.js');
+
+  app = express();
 
   app.configure(function() {
     app.pwd = path.dirname(module.uri);
@@ -48,21 +48,23 @@
     return db.Commit.findOne({
       'repo': repoRoute
     }, 'commits', function(err, commitList) {
+      var commitStream;
+
       if (err) {
         throw err;
       }
       if (commitList) {
-        return res.send(commitList);
+        return res.end(JSON.stringify(commitList));
       } else {
-        commits = commits.init();
         res.write('[');
-        commits.on('commit', function(commit) {
+        commitStream = getCommits.init();
+        commitStream.on('commit', function(commit) {
           return res.write(commit);
         });
-        commits.on('end', function() {
+        commitStream.on('end', function(string) {
           return res.end(']');
         });
-        return commits.get(req.params.user, req.params.repo);
+        return commitStream.get(req.params.user, req.params.repo);
       }
     });
   });

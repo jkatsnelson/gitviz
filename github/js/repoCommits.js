@@ -26,6 +26,7 @@
   fantasyGithub = {};
 
   reset = function() {
+    fantasyGithub = {};
     fantasyGithub.locations = {};
     fantasyGithub.commits = [];
     fantasyGithub.nextPage = null;
@@ -135,13 +136,15 @@
   };
 
   pushCommit = function(commit, commitList) {
+    var commitLocation;
+
     fantasyGithub.commits.push(fantasyGithub.locations[commit.author.login]);
     if (fantasyGithub.firstCommit) {
-      commit = JSON.stringify(fantasyGithub.locations[commit.author.login]);
+      commitLocation = JSON.stringify(fantasyGithub.locations[commit.author.login]);
     } else {
-      commit = ',' + JSON.stringify(fantasyGithub.locations[commit.author.login]);
+      commitLocation = ',' + JSON.stringify(fantasyGithub.locations[commit.author.login]);
     }
-    fantasyGithub.currentRequest.emit('commit', commit);
+    fantasyGithub.currentRequest.emit('commit', commitLocation);
     fantasyGithub.firstCommit = false;
     return traverseList(commitList);
   };
@@ -158,8 +161,7 @@
       if (err) {
         throw err;
       }
-      console.log('saved ' + fantasyGithub.repoAuthor + '/' + fantasyGithub.repoName);
-      return db.db.close();
+      return console.log('saved ' + fantasyGithub.repoAuthor + '/' + fantasyGithub.repoName);
     });
   };
 
