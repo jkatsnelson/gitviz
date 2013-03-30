@@ -50,20 +50,19 @@ angular.module('githubleagueClientApp')
           this.attributeCenters = {};
 
           // var widthScale = d3.scale.linear().domain([leastEvts, mostEvts]).range([200, 600]);
-          // debugger;
           for (var i = 0; i < this.uniqueEventList.length; i++) {
             var evtType = this.uniqueEventList[i];
             var evtCount = eventCounter[evtType];
-            var rows = this.uniqueEventList.length / 3;
+            var cols = 2;
+            var rows = this.uniqueEventList.length / cols;
             this.attributeCenters[evtType] = {
-              // x: widthScale(evtCount),
-              x: (1 + i % rows) * this.width / (rows + 2),
-              y: this.height * (Math.floor(i/rows + 2) / (rows + 3))
+              x: this.width * (i % rows + 2) / (rows + 2),
+              y: this.height * (Math.floor(i/rows) + 2 ) / (cols + 2)
             }
             debugger
           }
           this.layout_gravity = -0.015;
-          this.damper = 0.2;
+          this.damper = 0.3;
           this.vis = null;
           this.nodes = [];
           this.force = null;
