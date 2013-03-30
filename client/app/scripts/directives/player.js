@@ -56,13 +56,12 @@ angular.module('githubleagueClientApp')
             var cols = 2;
             var rows = this.uniqueEventList.length / cols;
             this.attributeCenters[evtType] = {
-              x: this.width * (i % rows + 2) / (rows + 2),
-              y: this.height * (Math.floor(i/rows) + 2 ) / (cols + 2)
+              x: this.width * (i % rows + 2) / (rows + 3),
+              y: this.height * (Math.floor(i/rows) + 2 ) / (cols + 3)
             }
-            debugger
           }
-          this.layout_gravity = -0.015;
-          this.damper = 0.3;
+          this.layout_gravity = -0.05;
+          this.damper = 0.25;
           this.vis = null;
           this.nodes = [];
           this.force = null;
@@ -174,26 +173,41 @@ angular.module('githubleagueClientApp')
           for (var i = 0; i < this.uniqueEventList.length; i++) {
             var evtType = this.uniqueEventList[i];
             var evtCount = eventCounter[evtType];
+            var group = _(this.nodes).where({type: evtType});
+            var avgx = _(group).reduce(function(a,b) {return a + b.x;}, 0) / group.length;
+            var avgy = _(group).reduce(function(a,b) {return a + b.y;}, 0) / group.length;
             eventTitleCenters[evtType] = {
-              x: (1+i) * this.width / this.uniqueEventList.length,
+              x: avgx,
+              y: avgy
             }
           }
 
-          // console.log('event titleCenters: ', eventTitleCenters);
           eventsData = d3.keys(eventTitleCenters);
-          // console.log('eventsData: ', eventsData);
           events = this.vis.selectAll(".events").data(eventsData);
-          return events.enter().append("text")
-                              .attr("class", "events")
-                              .attr("x", function(d) {
-                                // debugger;
-                                return eventTitleCenters[d].x;
-                              })
-                              .attr("y", 40)
-                              .attr("text-anchor", "start")
-                              .text(function(d) {
-                                return d;
-                              });
+
+          var that = this;
+          return events.enter()
+            .append("text")
+            .transition()
+            .delay(700)
+            .attr("class", "events")
+            .attr("fill", "gray")
+            .attr("font-size", 14)
+            .attr("x", function(d) {
+              var group = _(that.nodes).where({type: d});
+              var avgx = _(group).reduce(function(a,b) {return a + b.x;}, 0) / group.length;
+              return avgx;
+            })
+            .attr("y", function(d) {
+              var group = _(that.nodes).where({type: d});
+              var avgy = _(group).reduce(function(a,b) {return a + b.y;}, 0) / group.length;
+              return avgy;
+            })
+            .attr("text-anchor", "middle")
+            .attr("vertical-align", "middle")
+            .text(function(d) {
+              return d;
+            });
         };
 
         bubbleChart.prototype.hideEvents = function() {

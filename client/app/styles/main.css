@@ -130,6 +130,51 @@ h1 {
   color: white;
   border-style: none;
 }
+.nth-search input[type="submit"] {
+  padding: 22px;
+  margin-left: 11px;
+  width: 170px;
+  font-size: 36px;
+  font-weight: bold;
+  color: white;
+  background-color: red;
+  border-style: none;
+  display: none;
+}
+
+/*
+  User Github d3
+*/
+
+.player-chart {
+  width: 100%;
+}
+
+.chart-buttons {
+  width: 650px;
+  margin: 0 auto;
+}
+
+.chart-buttons button.showGroup {
+  padding: 22px;
+  width: 45%;
+  font-size: 36px;
+  font-weight: bold;
+  color: white;
+  background-color: #E8E8E8;
+  border-style: none;
+}
+
+.chart-buttons button.showSeparate {
+  padding: 22px;
+  margin-left: 5%;
+  width: 45%;
+  font-size: 36px;
+  font-weight: bold;
+  color: white;
+  background-color: #E8E8E8;
+  border-style: none;
+}
 .events {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 18px;
