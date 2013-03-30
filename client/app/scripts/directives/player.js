@@ -163,6 +163,8 @@ angular.module('githubleagueClientApp')
         };
 
         bubbleChart.prototype.showEvents = function() {
+          if (bubbleChart.showingEvents) return;
+          bubbleChart.showingEvents = true;
           var events,
               eventsData,
               eventTitleCenters = {};
@@ -204,7 +206,7 @@ angular.module('githubleagueClientApp')
         };
 
         bubbleChart.prototype.hideEvents = function() {
-          console.log('fired hide');
+          bubbleChart.showingEvents = false;
           var events;
           return events = this.vis.selectAll('.events').remove();
         }

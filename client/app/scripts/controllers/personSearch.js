@@ -29,7 +29,6 @@ angular.module('githubleagueClientApp')
       $http({method: 'GET', url: '/query/'+ gitUser }).
         success(function(data, status, headers, config) {
           $scope.events = createDateTypeObjects(data);
-          // console.log(data);
           $scope.findingPlayer = false;
           $scope.personReady = true;
         }).
@@ -38,16 +37,5 @@ angular.module('githubleagueClientApp')
         });
     };
 
-    // $scope.searchForRepo = function(gitUser, gitRepo) {
-    //   $scope.repoReady = false;
-    //   $scope.findingRepo = true;
-    //   $http({method: 'GET', url: '/query/' + gitUser + '/repo/' + gitRepo }).
-    //     success(function(data, status, headers, config) {
-    //       $scope.findingRepo = false;
-    //       $scope.repoReady = true;
-    //     }).
-    //     error(function(data, status, headers, config) {
-    //       console.log(status);
-    //     });
-    // };
+
   });

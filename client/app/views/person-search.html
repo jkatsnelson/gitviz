@@ -12,9 +12,19 @@
   <div ui-if="beyondFirstSearch" class="nth-search">
     <a href="#/"><button class="nav">go to repos</button></a>
     <form>
-      <h1>find someone else</h1>
-      <input type="text" class="search-bar" ng-model="gitUser">
-      <input type="submit"  ng-click="searchForUser(gitUser)" value="find em">
+
+      <div ui-if="findingPlayer">
+        <h1>finding {{user}}...</h1>
+        <input type="text" class="search-bar" ng-model="gitUser" placeholder="find someone else">
+        <input type="submit"  ng-click="searchForUser(gitUser)" value="finding...">
+      </div>
+
+      <div ui-if="personReady">
+        <h1>this is {{user}}</h1>
+        <input type="text" class="search-bar" ng-model="gitUser" placeholder="find someone else">
+        <input type="submit"  ng-click="searchForUser(gitUser)" value="find">
+      </div>
+
     </form>
   </div>
 
