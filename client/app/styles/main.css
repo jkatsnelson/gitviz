@@ -25,6 +25,13 @@ html, body {
   color: red;
 }
 
+text.events {
+  fill: #fff;
+  font-size: 15;
+  font-weight: bold;
+  text-shadow: 1px 1px 2px black, 0 0 0.5em blue, 0 0 0.2em blue;
+}
+
 
 
 /*
