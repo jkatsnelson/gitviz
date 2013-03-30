@@ -1,10 +1,26 @@
 <div class="repo-search">
   <a href="#/people"><button class="nav">go to people</button></a>
-  <h1>where does open source happen?</h1>
-  <input type="text" class="search-bar pull-left" ng-model="gitUser" placeholder="author">
-  <div class="slash pull-left clearfix">/</div>
-  <input type="text" class="search-bar right" ng-model="gitRepo" placeholder="repo">
-  <input type="submit" class="search-button"  ng-click="searchForRepo(gitUser, gitRepo)" value="find out">
+  <div ui-if="leadIn">
+    <h1>where does open source happen?</h1>
+    <form>
+      <input type="text" class="search-bar pull-left" ng-model="gitUser" placeholder="author">
+      <div class="slash pull-left clearfix">/</div>
+      <input type="text" class="search-bar right" ng-model="gitRepo" placeholder="repo">
+      <input type="submit" class="search-button"  ng-click="searchForRepo(gitUser, gitRepo)" value="find out">
+    </form>
+  </div>
+  <div ui-if="findingRepo">
+    <h1>finding {{user}}/{{repo}}</h1>
+  </div>
+  <div ui-if="repoFound">
+    <h1>{{user}}/{{repo}}</h1>
+  </div>
+  <form>
+    <input type="text" class="search-bar pull-left" ng-model="gitUser" placeholder="author">
+    <div class="slash pull-left clearfix">/</div>
+    <input type="text" class="search-bar right" ng-model="gitRepo" placeholder="repo">
+    <input type="submit" class="search-button"  ng-click="searchForRepo(gitUser, gitRepo)" value="find out">
+  </form>
 </div>
 
 <div ui-if="repoFound">

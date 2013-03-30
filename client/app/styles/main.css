@@ -76,7 +76,8 @@ h1 {
   font-size: 30px;
   padding: 20px;
   line-height: 30px;
-  width: 585px;
+  /*width: 585px;*/
+  width: 100%;
 }
 .nth-search button {
   padding: 22px 22px 22px 0;
@@ -89,14 +90,15 @@ h1 {
   border-style: none;
 }
 .nth-search input[type="submit"] {
-  padding: 22px;
-  width: 270px;
+  padding: 0px;
+  width: 0px;
   font-size: 36px;
   font-weight: bold;
   color: white;
   background-color: #E8E8E8;
   border-style: none;
   float: right;
+  display: hidden;
 }
 
 
