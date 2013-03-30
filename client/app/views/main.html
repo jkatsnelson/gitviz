@@ -11,8 +11,9 @@
   <h1>
     How does open source grow?
   </h1>
-  <p>e.g. mbostock d3</p>
-  <input type="text" class="search-bar" ng-model="gitUser" placeholder="author">
+  <p>e.g. mbostock/d3</p>
+  <input type="text" class="search-bar pull-left" ng-model="gitUser" placeholder="author">
+  <div class="slash pull-left clearfix">/</div>
   <input type="text" class="search-bar right" ng-model="gitRepo" placeholder="repo">
   <a href="#/people"><button class="nav">see more</button></a>
   <input type="submit" class="search-button"  ng-click="searchForRepo(gitUser, gitRepo)" value="Find out">
