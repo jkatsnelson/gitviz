@@ -21,6 +21,7 @@ angular.module('githubleagueClientApp')
     };
 
     $scope.searchForUser = function(gitUser) {
+      $scope.user = gitUser;
       $scope.personReady = false;
       $scope.firstSearch = false;
       $scope.beyondFirstSearch = true;
