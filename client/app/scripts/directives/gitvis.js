@@ -4,17 +4,17 @@ angular.module('githubleagueClientApp')
   .directive('gitvis', function () {
     return {
       template: '<div class="mapContainer"></div>'
-        + '<div class="cityRankings">'
-        + '<h2>Cities with the most activity:</h2>'
-        + '<ol class="cityListing"></ol>'
-        + '</div>',
+              + '<div class="cityRankings">'
+                + '<h2>Cities with the most activity:</h2>'
+                + '<ol class="cityListing"></ol>'
+              + '</div>',
       restrict: 'E',
       val: '=',
       link: function postLink(scope, element, attrs) {
         // element.text('this is the gitvis directive');
         function draw(ht) {
-          $("#mapContainer").html("<svg class='map' xmlns='http://www.w3.org/2000/svg' width='100%' height='" + ht + "'></svg>");
-          var map = d3.select("#map");
+          $(".mapContainer").html("<svg class='map' xmlns='http://www.w3.org/2000/svg' width='100%' height='" + ht + "'></svg>");
+          var map = d3.select(".map");
           var width = 600;
           var height = ht;
           var tick = 250;
@@ -24,7 +24,6 @@ angular.module('githubleagueClientApp')
           // container, the scale will be this ratio * 100. You could also use the height
           // instead. The aspect ratio of an equirectangular map is 2:1, so that's why
           // our height is half of our width.
-
           var projection = d3.geo.equirectangular().scale((width/600)*600).translate([width/2, height/2]);
           var path = d3.geo.path().projection(projection);
           d3.json('../geodata/world-map.json', function(collection) {
@@ -36,6 +35,8 @@ angular.module('githubleagueClientApp')
             .attr("height", width/2)
 
           var dataset = scope.repoHistory;
+          console.log(dataset);
+
           // remove locations without valid data
           for (var i = 0; i < dataset.length; i++) {
             if ((!dataset[i].lat) || (!dataset[i].lon)) {
@@ -54,6 +55,7 @@ angular.module('githubleagueClientApp')
              .delay(function(d,i) { return (i+1) * tick; })
              .duration(function(d, i) { return tick; })
              .attr('cx', function(d) {
+              console.log('cx: ',d);
                return projection([d.lon, d.lat])[0]; //projection(d.lon, d.lat)[0];
              })
              .attr('cy', function(d) {
@@ -91,6 +93,7 @@ angular.module('githubleagueClientApp')
             .text(function(d, i) { return d.city; })
             .attr("x", 605)
             .attr("y", 360)
+            .attr("class", "scrollingCity")
             .attr("font-size", "14px")
             .attr("font-family", 'Arial')
             .attr("fill", "black")
@@ -105,7 +108,7 @@ angular.module('githubleagueClientApp')
             }
           });
         }
-        draw($("#mapContainer").width()/2);
+        draw($(".mapContainer").width()/2);
       }
     };
   });

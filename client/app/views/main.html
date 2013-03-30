@@ -7,15 +7,14 @@
   <gitvis val="data"></gitvis>
 </div> -->
 
-<a href="#/people">go to git users</a>
-
-<div class="initial-search">
-  <h1>Repo search
-    <input type="text" class="search-bar" ng-model="gitUser" placeholder="mbostock">
-    <input type="text" class="search-bar" ng-model="gitRepo" placeholder="d3">
+<div class="repo-search">
+  <h1>
+    How does open source grow?
   </h1>
-  <button>back</button>
-  <input type="submit" class="search-button"  ng-click="searchForRepo(gitUser, gitRepo)" value="Find out.">
+  <input type="text" class="search-bar" ng-model="gitUser" placeholder="mbostock">
+  <input type="text" class="search-bar right" ng-model="gitRepo" placeholder="d3">
+  <a href="#/people"><button class="nav">see more</button></a>
+  <input type="submit" class="search-button"  ng-click="searchForRepo(gitUser, gitRepo)" value="Find out">
 </div>
 
 <div ui-if="repoFound">
