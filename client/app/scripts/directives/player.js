@@ -190,7 +190,6 @@ angular.module('githubleagueClientApp')
             .transition()
             .delay(700)
             .attr("class", "events")
-
             .attr("x", function(d) {
               var group = _(that.nodes).where({type: d});
               var avgx = _(group).reduce(function(a,b) {return a + b.x;}, 0) / group.length;
@@ -201,8 +200,6 @@ angular.module('githubleagueClientApp')
               var avgy = _(group).reduce(function(a,b) {return a + b.y;}, 0) / group.length;
               return avgy;
             })
-            .attr("text-anchor", "middle")
-            .attr("vertical-align", "middle")
             .text(function(d) {
               return d;
             });
