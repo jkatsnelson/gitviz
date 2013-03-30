@@ -53,11 +53,11 @@ angular.module('githubleagueClientApp')
           for (var i = 0; i < this.uniqueEventList.length; i++) {
             var evtType = this.uniqueEventList[i];
             var evtCount = eventCounter[evtType];
-            var cols = 2;
-            var rows = this.uniqueEventList.length / cols;
+            var numrows = 2;
+            var row = Math.floor(this.uniqueEventList.length / numrows);
             this.attributeCenters[evtType] = {
-              x: this.width * (i % rows + 2) / (rows + 3),
-              y: this.height * (Math.floor(i/rows) + 2 ) / (cols + 3)
+              x: this.width * (i % row + 2) / (row + 3),
+              y: this.height * (Math.floor(i/row) + 2 ) / (numrows + 3)
             }
           }
           this.layout_gravity = -0.05;
@@ -66,7 +66,7 @@ angular.module('githubleagueClientApp')
           this.nodes = [];
           this.force = null;
           this.circles = null;
-          this.fill_color = d3.scale.ordinal().domain(["nightOwl", "dayTripper"]).range(["#381E6B", "#FFF12E"]);
+          this.fill_color = d3.scale.ordinal().domain(["nightOwl", "dayTripper"]).range(["#3229d2", "#FF9700"]);
           this.create_nodes();
           this.create_vis();
           return this;
@@ -95,7 +95,6 @@ angular.module('githubleagueClientApp')
         };
 
         bubbleChart.prototype.create_vis = function() {
-          // debugger;
           var that = this;
           this.vis = d3.select(".player-chart").append("svg").attr("width", this.width).attr("height", this.height).attr("id", "svg_vis");
           this.circles = this.vis.selectAll("circle").data(this.nodes, function(d) {
@@ -191,8 +190,6 @@ angular.module('githubleagueClientApp')
             .transition()
             .delay(700)
             .attr("class", "events")
-            .attr("fill", "gray")
-            .attr("font-size", 14)
             .attr("x", function(d) {
               var group = _(that.nodes).where({type: d});
               var avgx = _(group).reduce(function(a,b) {return a + b.x;}, 0) / group.length;
@@ -203,8 +200,6 @@ angular.module('githubleagueClientApp')
               var avgy = _(group).reduce(function(a,b) {return a + b.y;}, 0) / group.length;
               return avgy;
             })
-            .attr("text-anchor", "middle")
-            .attr("vertical-align", "middle")
             .text(function(d) {
               return d;
             });
