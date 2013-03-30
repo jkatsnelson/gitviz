@@ -5,8 +5,12 @@ angular.module('githubleagueClientApp')
     return {
       template: '<div class="player-chart">'
                   + '<div class="chart-buttons">'
-                    + '<button class="showGroup">mash up</button>'
-                    + '<button class="showSeparate">pull apart</button>'
+                    + '<button class="showGroup pull-left">mash up</button>'
+                    + '<button class="showSeparate pull-left">pull apart</button>'
+                    + '<div class="pull-left clearfix">'
+                        +'<div class="red_legend legend pull-left"><img /><div class="day">Day</div></div>'
+                        +'<div class="blue_legend legend pull-right"><img /><div class="night">Night</div></div>'
+                    + '</div>'
                   + '</div>'
                 + '</div>',
       restrict: 'E',

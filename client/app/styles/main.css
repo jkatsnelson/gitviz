@@ -10,7 +10,31 @@ html, body {
   color: gray;
 }
 
+.night, .day {
+  margin-left: 44px;
+  color: white;
+  font-size: 22px;
+  font-weight: bold;
+}
+.night {
+  margin-left: 38px;
+}
 
+div .legend {
+  width:128px;
+  height:64px;   
+}
+
+
+div .red_legend {
+  background-color: red;
+  margin-left: 40px;
+}
+
+div .blue_legend { 
+  background-color: blue;
+  margin-left: 10px;
+}
 
 /*
   person search
