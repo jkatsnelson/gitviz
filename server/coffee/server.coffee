@@ -3,9 +3,10 @@ routes = require 'routes'
 http = require 'http'
 path = require 'path'
 userEvents = require __dirname + '/../../github/js/userEvents.js'
-commits = require __dirname + '/../../github/js/repoCommits.js'
-app = express()
+getCommits = require __dirname + '/../../github/js/repoCommits.js'
 db = require __dirname + '/../../server/js/db.js'
+
+app = express()
 # app locals
 app.configure () ->
   app.pwd = path.dirname module.uri
@@ -33,15 +34,15 @@ app.get '/query/:user/repo/:repo', (req, res) ->
   db.Commit.findOne { 'repo': repoRoute }, 'commits', (err, commitList) ->
     throw err if err
     if commitList
-      res.send commitList
+      res.end JSON.stringify commitList
     else
-      commits = commits.init()
       res.write '['
-      commits.on 'commit', (commit) ->
+      commitStream = getCommits.init()
+      commitStream.on 'commit', (commit) ->
         res.write commit
-      commits.on 'end', () ->
+      commitStream.on 'end', (string) ->
         res.end ']'
-      commits.get req.params.user, req.params.repo
+      commitStream.get req.params.user, req.params.repo
 
 app.listen 3000
 
