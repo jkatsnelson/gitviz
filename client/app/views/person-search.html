@@ -4,30 +4,27 @@
       <h1>What does your git history look like?
         <input type="text" class="search-bar" ng-model="gitUser" placeholder="your git name">
       </h1>
-      <button>back</button>
-      <input type="submit" class="search-button"  ng-click="searchForUser(gitUser)" value="Find out.">
+      <a href="#/"><button class="nav">back to map</button></a>
+      <input type="submit" class="search-button"  ng-click="searchForUser(gitUser)" value="Find out">
     </div>
 
     <div ui-if="beyondFirstSearch" class="nth-search">
-      <button>back</button>
+      <a href="#/"><button class="nav">back to map</button></a>
       <input type="text" class="search-bar" ng-model="gitUser" placeholder="find someone else">
-      <input type="submit" class="search-button"  ng-click="searchForUser(gitUser)" value="Get 'em">
+      <!-- <input type="submit" class="search-button"  ng-click="searchForUser(gitUser)" value="Get 'em"> -->
     </div>
 
-
-
-
-
-
-
-
-
-    <div ui-if="repoReady">
-      <gitviz></gitviz>
-    </div>
     <div ui-if="personReady">
       <player></player>
     </div>
+
+
+
+
+
+
+
+
     <div ui-if="findingPlayer">
       <p>Git is finding {{gitUser}}</p>
 <!--       <div class="progress progress-striped active">
