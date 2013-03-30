@@ -61,7 +61,7 @@ traverseList = (commitList) ->
   else
     if fantasyGithub.nextPage then fantasyGithub.currentRequest.get()
     else
-      saveCommits fantasyGithub.commits
+      saveCommits()
 
 fetchLocation = (contributor, commitList) ->
   request.get userURL + contributor + auth, (err, res, body) ->
@@ -82,20 +82,22 @@ fetchLocation = (contributor, commitList) ->
       traverseList commitList
 
 pushCommit = (commit, commitList) ->
-  fantasyGithub.commits.push fantasyGithub.locations[commit.author.login]
+  commitPackage = fantasyGithub.locations[commit.author.login]
+  commitPackage.commit = commit
+  fantasyGithub.commits.push commitPackage
   if fantasyGithub.firstCommit
-    commitLocation = JSON.stringify fantasyGithub.locations[commit.author.login]
+    commitPackage = JSON.stringify commitPackage
   else
-    commitLocation = ',' + JSON.stringify fantasyGithub.locations[commit.author.login]
-  fantasyGithub.currentRequest.emit 'commit', commitLocation
+    commitPackage = ',' + JSON.stringify commitPackage
+  fantasyGithub.currentRequest.emit 'commit', commitPackage
   fantasyGithub.firstCommit = false
   traverseList commitList
 
-saveCommits = (commits) ->
+saveCommits = () ->
   fantasyGithub.currentRequest.emit 'end', 'done!'
   newCommit = new Commit
     repo: fantasyGithub.repoAuthor + '/' + fantasyGithub.repoName
-    commits: commits
+    commits: fantasyGithub.commits
   newCommit.save (err) ->
     throw err if err
     console.log 'saved '+ fantasyGithub.repoAuthor + '/' + fantasyGithub.repoName

@@ -98,7 +98,7 @@
       if (fantasyGithub.nextPage) {
         return fantasyGithub.currentRequest.get();
       } else {
-        return saveCommits(fantasyGithub.commits);
+        return saveCommits();
       }
     }
   };
@@ -136,26 +136,28 @@
   };
 
   pushCommit = function(commit, commitList) {
-    var commitLocation;
+    var commitPackage;
 
-    fantasyGithub.commits.push(fantasyGithub.locations[commit.author.login]);
+    commitPackage = fantasyGithub.locations[commit.author.login];
+    commitPackage.commit = commit;
+    fantasyGithub.commits.push(commitPackage);
     if (fantasyGithub.firstCommit) {
-      commitLocation = JSON.stringify(fantasyGithub.locations[commit.author.login]);
+      commitPackage = JSON.stringify(commitPackage);
     } else {
-      commitLocation = ',' + JSON.stringify(fantasyGithub.locations[commit.author.login]);
+      commitPackage = ',' + JSON.stringify(commitPackage);
     }
-    fantasyGithub.currentRequest.emit('commit', commitLocation);
+    fantasyGithub.currentRequest.emit('commit', commitPackage);
     fantasyGithub.firstCommit = false;
     return traverseList(commitList);
   };
 
-  saveCommits = function(commits) {
+  saveCommits = function() {
     var newCommit;
 
     fantasyGithub.currentRequest.emit('end', 'done!');
     newCommit = new Commit({
       repo: fantasyGithub.repoAuthor + '/' + fantasyGithub.repoName,
-      commits: commits
+      commits: fantasyGithub.commits
     });
     return newCommit.save(function(err) {
       if (err) {
