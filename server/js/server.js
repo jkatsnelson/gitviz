@@ -52,7 +52,7 @@
         throw err;
       }
       if (commitList) {
-        return res.send(commitList);
+        return res.send(commitList.commits);
       } else {
         commits = commits.init();
         res.write('[');

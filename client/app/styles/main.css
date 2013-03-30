@@ -23,13 +23,14 @@ html, body {
 */
 
 .initial-search {
-  width: 500px;
+  width: 650px;
   margin: 0 auto;
   padding: 33px 0 33px 0;
 }
 
-.initial-search h1 {
+h1 {
   line-height: 70px;
+  color: gray;
 }
 
 .initial-search input[type="text"] {
@@ -37,31 +38,30 @@ html, body {
   padding: 20px;
   line-height: 30px;
   text-align: center;
-  width: 225px;
-  margin-left: 11px;
-  margin-top: 11px;
-  margin-bottom: 22px;
+  width: 580px;
 }
 
-.initial-search button {
+.nav {
   padding: 22px;
-  width: 170px;
+  width: 260px;
   font-size: 36px;
   font-weight: bold;
-  color: white;
-  background-color: #E8E8E8;
+  text-align: left;
+  color: #E8E8E8;
+  background-color: white;
   border-style: none;
 }
 
 .initial-search input[type="submit"] {
   padding: 22px;
-  margin-left: 11px;
   width: 270px;
   font-size: 36px;
   font-weight: bold;
   color: white;
   background-color: red;
   border-style: none;
+  float: right;
+  margin-right: 26px;
 }
 
 /*
@@ -69,7 +69,7 @@ html, body {
 */
 
 .nth-search {
-  width: 840px;
+  width: 650px;
   margin: 0 auto;
   padding: 33px 0 33px 0;
 }
@@ -80,12 +80,12 @@ html, body {
   line-height: 30px;
   text-align: center;
   width: 430px;
-  margin-top: 9px;
+  margin: 0 auto 0 auto;
 }
 
 .nth-search button {
-  padding: 22px;
-  width: 170px;
+  padding: 22px 22px 22px 0;
+  width: 260px;
   font-size: 36px;
   font-weight: bold;
   color: rgb(226, 226, 226);
@@ -102,7 +102,7 @@ html, body {
   color: white;
   background-color: red;
   border-style: none;
-  /*display: none;*/
+  display: none;
 }
 
 /*
@@ -114,7 +114,7 @@ html, body {
 }
 
 .chart-buttons {
-  width: 500px;
+  width: 650px;
   margin: 0 auto;
 }
 
@@ -146,6 +146,37 @@ html, body {
 }
 
 
+/*
+  Repo Search
+*/
+.repo-search {
+  width: 650px;
+  margin: 0 auto;
+  padding: 33px 0 33px 0;
+}
+
+.repo-search input[type="text"] {
+  font-size: 30px;
+  padding: 20px;
+  line-height: 30px;
+  width: 38%;
+}
+
+.repo-search input[type="submit"] {
+  padding: 22px;
+  margin-right: 60px;
+  float: right;
+  width: 286px;
+  font-size: 36px;
+  font-weight: bold;
+  color: white;
+  background-color: red;
+  border-style: none;
+}
+
+.repo-search .right {
+  margin-left: 11px;
+}
 
 
 
@@ -159,7 +190,7 @@ html, body {
 
 
 
-#mapContainer {
+.mapContainer {
   width: 820px;
 }
 

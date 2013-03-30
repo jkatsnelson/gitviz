@@ -33,7 +33,7 @@ app.get '/query/:user/repo/:repo', (req, res) ->
   db.Commit.findOne { 'repo': repoRoute }, 'commits', (err, commitList) ->
     throw err if err
     if commitList
-      res.send commitList
+      res.send commitList.commits
     else
       commits = commits.init()
       res.write '['
