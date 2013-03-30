@@ -15,6 +15,7 @@ userURL = 'https://api.github.com/users/'
 fantasyGithub = {}
 
 reset = () ->
+  fantasyGithub = {}
   fantasyGithub.locations = {}
   fantasyGithub.commits = []
   fantasyGithub.nextPage = null
@@ -83,10 +84,10 @@ fetchLocation = (contributor, commitList) ->
 pushCommit = (commit, commitList) ->
   fantasyGithub.commits.push fantasyGithub.locations[commit.author.login]
   if fantasyGithub.firstCommit
-    commit = JSON.stringify fantasyGithub.locations[commit.author.login]
+    commitLocation = JSON.stringify fantasyGithub.locations[commit.author.login]
   else
-    commit = ',' + JSON.stringify fantasyGithub.locations[commit.author.login]
-  fantasyGithub.currentRequest.emit 'commit', commit
+    commitLocation = ',' + JSON.stringify fantasyGithub.locations[commit.author.login]
+  fantasyGithub.currentRequest.emit 'commit', commitLocation
   fantasyGithub.firstCommit = false
   traverseList commitList
 
@@ -98,6 +99,5 @@ saveCommits = (commits) ->
   newCommit.save (err) ->
     throw err if err
     console.log 'saved '+ fantasyGithub.repoAuthor + '/' + fantasyGithub.repoName
-    db.db.close()
 
 exports.init = init
