@@ -88,6 +88,7 @@ h1 {
   line-height: 30px;
   width: 585px;
   /*width: 100%;*/
+
 }
 .nth-search button {
   padding: 22px 22px 22px 0;
@@ -114,6 +115,7 @@ h1 {
 .nth-search input[type="submit"].light {
   background-color: #E8E8E8;
 }
+
 
 
 /*
@@ -185,6 +187,5 @@ h1 {
 .cityListing {
 
 }
-
 
 
