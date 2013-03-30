@@ -82,19 +82,16 @@
   };
 
   traverseList = function(commitList) {
-    var contributor;
-
     if (commitList.length) {
       if (!commitList[0].author) {
         commitList[0].author = {
           login: 'not specified'
         };
       }
-      contributor = commitList[0].author.login;
-      if (fantasyGithub.locations.contributor) {
+      if (fantasyGithub.locations[commitList[0].author.login]) {
         return pushCommit(commitList.shift(), commitList);
       } else {
-        return fetchLocation(contributor, commitList);
+        return fetchLocation(commitList[0].author.login, commitList);
       }
     } else {
       if (fantasyGithub.nextPage) {
@@ -121,14 +118,14 @@
           throw err;
         }
         if (data.status === "OK") {
-          fantasyGithub.locations.contributor = {
+          fantasyGithub.locations[contributor] = {
             userInput: user.location,
             city: data.results[0].formatted_address,
             lat: data.results[0].geometry.location.lat,
             lon: data.results[0].geometry.location.lng
           };
         } else {
-          locations[contributor] = {
+          fantasyGithub.locations[contributor] = {
             city: user.location
           };
         }
@@ -138,20 +135,11 @@
   };
 
   pushCommit = function(commit, commitList) {
-    var newCommit;
-
-    newCommit = {
-      repo: fantasyGithub.repoAuthor + '/' + fantasyGithub.repoName,
-      contributor: commit.author.login,
-      message: commit.commit.message,
-      date: commit.commit.author.date,
-      location: fantasyGithub.locations[commit.author.login]
-    };
-    fantasyGithub.commits.push(commit.location);
+    fantasyGithub.commits.push(fantasyGithub.locations[commit.author.login]);
     if (fantasyGithub.firstCommit) {
-      commit = JSON.stringify(commit.location);
+      commit = JSON.stringify(fantasyGithub.locations[commit.author.login]);
     } else {
-      commit = ',' + JSON.stringify(commit.location);
+      commit = ',' + JSON.stringify(fantasyGithub.locations[commit.author.login]);
     }
     fantasyGithub.currentRequest.emit('commit', commit);
     fantasyGithub.firstCommit = false;
