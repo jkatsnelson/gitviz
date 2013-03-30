@@ -56,7 +56,7 @@ angular.module('githubleagueClientApp')
             var evtType = this.uniqueEventList[i];
             var evtCount = eventCounter[evtType];
             var numrows = 2;
-            var row = Math.floor(this.uniqueEventList.length / numrows);
+            var row = Math.floor((this.uniqueEventList.length +1 ) / numrows);
             this.attributeCenters[evtType] = {
               x: this.width * (i % row + 2) / (row + 3),
               y: this.height * (Math.floor(i/row) + 2 ) / (numrows + 3)
