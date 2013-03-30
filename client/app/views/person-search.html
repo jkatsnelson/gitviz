@@ -2,16 +2,20 @@
 
   <div ui-if="firstSearch" class="initial-search">
     <a href="#/"><button class="nav">go to repos</button></a>
-    <h1>wat does your git history look like?</h1>
-    <input type="text" class="search-bar" ng-model="gitUser" placeholder="your git name">
-    <input type="submit" class="search-button"  ng-click="searchForUser(gitUser)" value="find out">
+    <form>
+      <h1>wat does your git history look like?</h1>
+      <input type="text" class="search-bar" ng-model="gitUser" placeholder="your git name">
+      <input type="submit" class="search-button"  ng-click="searchForUser(gitUser)" value="find out">
+    </form>
   </div>
 
   <div ui-if="beyondFirstSearch" class="nth-search">
     <a href="#/"><button class="nav">go to repos</button></a>
-    <h1>find someone else</h1>
-    <input type="text" class="search-bar" ng-model="gitUser" placeholder="enter a git handle">
-    <input type="submit"  ng-click="searchForUser(gitUser)" value="find em">
+    <form>
+      <h1>find someone else</h1>
+      <input type="text" class="search-bar" ng-model="gitUser">
+      <input type="submit"  ng-click="searchForUser(gitUser)" value="find em">
+    </form>
   </div>
 
   <div ui-if="personReady">
