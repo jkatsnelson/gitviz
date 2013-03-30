@@ -5,7 +5,7 @@ angular.module('githubleagueClientApp')
     return {
       template: '<div class="player-chart">'
                   + '<div class="chart-buttons">'
-                    + '<button class="showGroup">mash</button>'
+                    + '<button class="showGroup">mash up</button>'
                     + '<button class="showSeparate">pull apart</button>'
                   + '</div>'
                 + '</div>',

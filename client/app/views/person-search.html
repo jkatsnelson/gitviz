@@ -1,41 +1,22 @@
 <div class="person-search">
 
-    <div ui-if="firstSearch" class="initial-search">
-      <h1>What does your git history look like?
-        <input type="text" class="search-bar" ng-model="gitUser" placeholder="your git name">
-      </h1>
-      <a href="#/"><button class="nav">back to map</button></a>
-      <input type="submit" class="search-button"  ng-click="searchForUser(gitUser)" value="Find out">
-    </div>
+  <div ui-if="firstSearch" class="initial-search">
+    <a href="#/"><button class="nav">go to repos</button></a>
+    <h1>wat does your git history look like?</h1>
+    <input type="text" class="search-bar" ng-model="gitUser" placeholder="your git name">
+    <input type="submit" class="search-button"  ng-click="searchForUser(gitUser)" value="find out">
+  </div>
 
-    <div ui-if="beyondFirstSearch" class="nth-search">
-      <a href="#/"><button class="nav">back to map</button></a>
-      <input type="text" class="search-bar" ng-model="gitUser" placeholder="find someone else">
-      <!-- <input type="submit" class="search-button"  ng-click="searchForUser(gitUser)" value="Get 'em"> -->
-    </div>
+  <div ui-if="beyondFirstSearch" class="nth-search">
+    <a href="#/"><button class="nav">go to repos</button></a>
+    <h1>find someone else</h1>
+    <input type="text" class="search-bar" ng-model="gitUser" placeholder="enter a git handle">
+    <input type="submit"  ng-click="searchForUser(gitUser)" value="find em">
+  </div>
 
-    <div ui-if="personReady">
-      <player></player>
-    </div>
-
-
-
-
-
-
-
-
-    <div ui-if="findingPlayer">
-      <p>Git is finding {{gitUser}}</p>
-<!--       <div class="progress progress-striped active">
-        <div class="bar bar-user" style="width: 40%;"></div>
-      </div> -->
-    </div>
-
-    <div ui-if="findingRepo">
-      <p>Git is finding {{gitRepo}}</p>
-<!--       <div class="progress progress-striped active">
-        <div class="bar bar-repo" style="width: 40%;"></div> -->
-    </div>
+  <div ui-if="personReady">
+    <hr>
+    <player></player>
+  </div>
 
 </div>
