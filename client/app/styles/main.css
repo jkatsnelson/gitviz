@@ -3,36 +3,6 @@ html, body {
   background-color: #FFF;
 }
 
-/*
-  person search
-*/
-
-.person-search {
-  width: 940px;
-  height: 800px;
-  background-color: white;
-  color: gray;
-}
-
-.person-search span.red {
-  color: red;
-}
-
-/*
-  initial search area
-*/
-
-.initial-search {
-  width: 650px;
-  margin: 0 auto;
-  padding: 33px 0 33px 0;
-}
-
-h1 {
-  line-height: 70px;
-  color: gray;
-}
-
 .slash {
   margin-left: 5px;
   margin-top: 20px;
@@ -40,17 +10,42 @@ h1 {
   color: gray;
 }
 
+
+
+/*
+  person search
+*/
+.person-search {
+  width: 940px;
+  height: 800px;
+  background-color: white;
+  color: gray;
+}
+.person-search span.red {
+  color: red;
+}
+
+
+
+/*
+  initial search area
+*/
+.initial-search {
+  width: 100%;
+}
+h1 {
+  line-height: 70px;
+  color: gray;
+}
 .initial-search input[type="text"] {
   font-size: 30px;
   padding: 20px;
   line-height: 30px;
-  text-align: center;
-  width: 580px;
+  width: 585px;
 }
-
 .nav {
-  padding: 22px;
-  width: 260px;
+  padding: 22px 0 22px 0;
+  width: 460px;
   font-size: 36px;
   font-weight: bold;
   text-align: left;
@@ -58,7 +53,6 @@ h1 {
   background-color: white;
   border-style: none;
 }
-
 .initial-search input[type="submit"] {
   padding: 22px;
   width: 270px;
@@ -68,84 +62,74 @@ h1 {
   background-color: red;
   border-style: none;
   float: right;
-  margin-right: 26px;
 }
+
+
 
 /*
   secondary search area
 */
-
 .nth-search {
-  width: 650px;
-  margin: 0 auto;
-  padding: 33px 0 33px 0;
+  width: 100%;
 }
-
 .nth-search input[type="text"] {
   font-size: 30px;
   padding: 20px;
   line-height: 30px;
-  text-align: center;
-  width: 575px;
-  margin: 0 auto 0 auto;
+  width: 585px;
 }
-
 .nth-search button {
   padding: 22px 22px 22px 0;
   width: 260px;
   font-size: 36px;
   font-weight: bold;
+  text-align: left;
   color: rgb(226, 226, 226);
   background-color: white;
   border-style: none;
 }
-
 .nth-search input[type="submit"] {
   padding: 22px;
-  margin-left: 11px;
-  width: 170px;
+  width: 270px;
+  font-size: 36px;
+  font-weight: bold;
+  color: white;
+  background-color: #E8E8E8;
+  border-style: none;
+  float: right;
+}
+
+
+
+/*
+  User Github d3
+*/
+.player-chart {
+  width: 100%;
+}
+.chart-buttons {
+  width: 100%;
+  margin-top: 22px;
+}
+.chart-buttons button.showGroup {
+  padding: 22px;
+  width: 48%;
   font-size: 36px;
   font-weight: bold;
   color: white;
   background-color: red;
   border-style: none;
-  display: none;
 }
-
-/*
-  User Github d3
-*/
-
-.player-chart {
-  width: 100%;
-}
-
-.chart-buttons {
-  width: 650px;
-  margin: 0 auto;
-}
-
-.chart-buttons button.showGroup {
-  padding: 22px;
-  width: 45%;
-  font-size: 36px;
-  font-weight: bold;
-  color: white;
-  background-color: #E8E8E8;
-  border-style: none;
-}
-
 .chart-buttons button.showSeparate {
   padding: 22px;
-  margin-left: 5%;
-  width: 45%;
+  float: right;
+  width: 48%;
   font-size: 36px;
   font-weight: bold;
+  background-color: red;
   color: white;
-  background-color: #E8E8E8;
   border-style: none;
 }
-
 .events {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 18px;
@@ -153,84 +137,36 @@ h1 {
 }
 
 
+
 /*
   Repo Search
 */
 .repo-search {
-  width: 650px;
-  margin: 0 auto;
-  padding: 33px 0 33px 0;
+  width: 100%;
 }
-
 .repo-search input[type="text"] {
   font-size: 30px;
   padding: 20px;
   line-height: 30px;
-  width: 38%;
+  width: 26.8%;
 }
-
 .repo-search input[type="submit"] {
   padding: 22px;
-  margin-right: 60px;
   float: right;
-  width: 286px;
+  width: 270px;
   font-size: 36px;
   font-weight: bold;
   color: white;
   background-color: red;
   border-style: none;
 }
-
 .repo-search .right {
   margin-left: 11px;
 }
-
-
-
-
-
-
-/*
-  tbwo
-*/
-
-
-
 .mapContainer {
-  width: 820px;
+  margin-top: 33px;
+  width: 900px;
 }
+.cityListing {
 
-.chart {
-  background: #fff;
-  border: solid 1px #ddd;
-  box-shadow: 0 0 4px rgba(0,0,0,.2);
-  font: 10px sans-serif;
-  height: 180px;
-  position: relative;
-  width: 720px;
-}
-
-.chart svg {
-  border-left: solid 2px #ddd;
-  left: 360px;
-  position: absolute;
-  top: 0;
-}
-
-.chart circle.little {
-  fill: #aaa;
-  stroke: #666;
-  stroke-width: 1.5px;
-}
-
-.chart button {
-  left: 275px;
-  position: absolute;
-  top: 145px;
-  width: 80px;
-}
-
-.chart .data rect {
-  fill: #eee;
-  stroke: #ccc;
 }

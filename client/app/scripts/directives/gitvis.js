@@ -5,8 +5,8 @@ angular.module('githubleagueClientApp')
     return {
       template: '<div class="mapContainer"></div>'
               + '<div class="cityRankings">'
-                + '<h2>Cities with the most activity:</h2>'
-                + '<ol class="cityListing"></ol>'
+                + '<h1>Top three cities by commits</h1>'
+                + '<div class="cityListing"></div>'
               + '</div>',
       restrict: 'E',
       val: '=',
@@ -15,7 +15,7 @@ angular.module('githubleagueClientApp')
         function draw(ht) {
           $(".mapContainer").html("<svg class='map' xmlns='http://www.w3.org/2000/svg' width='100%' height='" + ht + "'></svg>");
           var map = d3.select(".map");
-          var width = 600;
+          var width = 900;
           var height = ht;
           var tick = 250;
 
@@ -104,7 +104,7 @@ angular.module('githubleagueClientApp')
               .sort(function(a,b) { return a[1] < b[1];})
               .value()
             for (var i = 0; i < cityCounts.length && i < 10; i++) {
-              $('.cityListing').append('<li>'+cityCounts[i][0]+': '+cityCounts[i][1]);
+              $('.cityListing').append('<h1 class="cityName">'+cityCounts[i][0]+': '+cityCounts[i][1] + ' commits');
             }
           });
         }
