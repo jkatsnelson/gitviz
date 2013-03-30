@@ -55,9 +55,8 @@ traverseList = (commitList) ->
   if commitList.length
     unless commitList[0].author
       commitList[0].author = login: 'not specified'
-    contributor = commitList[0].author.login
-    if fantasyGithub.locations.contributor then pushCommit commitList.shift(), commitList
-    else fetchLocation contributor, commitList
+    if fantasyGithub.locations[commitList[0].author.login] then pushCommit commitList.shift(), commitList
+    else fetchLocation commitList[0].author.login, commitList
   else
     if fantasyGithub.nextPage then fantasyGithub.currentRequest.get()
     else
@@ -73,26 +72,20 @@ fetchLocation = (contributor, commitList) ->
     gm.geocode user.location, (err, data) ->
       throw err if err
       if data.status is "OK"
-        fantasyGithub.locations.contributor =
+        fantasyGithub.locations[contributor] =
           userInput: user.location
           city: data.results[0].formatted_address
           lat: data.results[0].geometry.location.lat
           lon: data.results[0].geometry.location.lng
-      else locations[contributor] = city: user.location
+      else fantasyGithub.locations[contributor] = city: user.location
       traverseList commitList
 
 pushCommit = (commit, commitList) ->
-  newCommit =
-    repo: fantasyGithub.repoAuthor + '/' + fantasyGithub.repoName
-    contributor: commit.author.login
-    message: commit.commit.message
-    date: commit.commit.author.date
-    location : fantasyGithub.locations[commit.author.login]
-  fantasyGithub.commits.push commit.location
+  fantasyGithub.commits.push fantasyGithub.locations[commit.author.login]
   if fantasyGithub.firstCommit
-    commit = JSON.stringify commit.location
+    commit = JSON.stringify fantasyGithub.locations[commit.author.login]
   else
-    commit = ',' + JSON.stringify commit.location
+    commit = ',' + JSON.stringify fantasyGithub.locations[commit.author.login]
   fantasyGithub.currentRequest.emit 'commit', commit
   fantasyGithub.firstCommit = false
   traverseList commitList
