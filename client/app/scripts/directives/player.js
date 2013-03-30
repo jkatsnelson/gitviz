@@ -5,8 +5,12 @@ angular.module('githubleagueClientApp')
     return {
       template: '<div class="player-chart">'
                   + '<div class="chart-buttons">'
-                    + '<button class="showGroup">mash up</button>'
-                    + '<button class="showSeparate">pull apart</button>'
+                    + '<button class="showGroup pull-left">mash up</button>'
+                    + '<button class="showSeparate pull-left">pull apart</button>'
+                    + '<div class="pull-left clearfix">'
+                        +'<div class="red_legend legend pull-left"><img /><div class="day">Day</div></div>'
+                        +'<div class="blue_legend legend pull-right"><img /><div class="night">Night</div></div>'
+                    + '</div>'
                   + '</div>'
                 + '</div>',
       restrict: 'E',
@@ -188,6 +192,8 @@ angular.module('githubleagueClientApp')
             .transition()
             .delay(700)
             .attr("class", "events")
+            .attr("fill", "gray")
+            .attr("font-size", 14)
             .attr("x", function(d) {
               var group = _(that.nodes).where({type: d});
               var avgx = _(group).reduce(function(a,b) {return a + b.x;}, 0) / group.length;
@@ -198,6 +204,8 @@ angular.module('githubleagueClientApp')
               var avgy = _(group).reduce(function(a,b) {return a + b.y;}, 0) / group.length;
               return avgy;
             })
+            .attr("text-anchor", "middle")
+            .attr("vertical-align", "middle")
             .text(function(d) {
               return d;
             });
