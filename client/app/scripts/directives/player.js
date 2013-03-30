@@ -5,8 +5,12 @@ angular.module('githubleagueClientApp')
     return {
       template: '<div class="player-chart">'
                   + '<div class="chart-buttons">'
-                    + '<button class="showGroup">mash up</button>'
-                    + '<button class="showSeparate">pull apart</button>'
+                    + '<button class="showGroup pull-left">mash up</button>'
+                    + '<button class="showSeparate pull-left">pull apart</button>'
+                    + '<div class="pull-left clearfix">'
+                        +'<div class="red_legend legend pull-left"><img /><div class="day">day</div></div>'
+                        +'<div class="blue_legend legend pull-right"><img /><div class="night">night</div></div>'
+                    + '</div>'
                   + '</div>'
                 + '</div>',
       restrict: 'E',
@@ -17,11 +21,11 @@ angular.module('githubleagueClientApp')
 
         $('.player-chart').on('click', function(event) {
           var viewType = event.target.className;
-          if (viewType === 'showGroup') {
+          if (viewType === 'showGroup pull-left') {
               bChart.display_group_all();
               bChart.hideEvents();
           }
-          if (viewType === 'showSeparate') {
+          if (viewType === 'showSeparate pull-left') {
             bChart.displayByAttribute();
             bChart.showEvents();
           }

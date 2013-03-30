@@ -10,6 +10,34 @@ html, body {
   color: gray;
 }
 
+.night, .day {
+  margin-left: 44px;
+  color: white;
+  font-size: 22px;
+  font-weight: bold;
+}
+.night {
+  margin-left: 38px;
+}
+
+div .legend {
+  width:128px;
+  height:64px;
+}
+
+
+div .red_legend {
+  background-color: #FF9700;
+  margin-left: 40px;
+  border-radius: 35px;
+}
+
+div .blue_legend {
+  background-color: blue;
+  margin-left: 10px;
+  border-radius: 35px;
+}
+
 
 
 /*
@@ -109,8 +137,6 @@ h1 {
   float: right;
 }
 
-
-
 /*
   User Github d3
 */
@@ -174,4 +200,12 @@ h1 {
 }
 .cityListing {
 
+}
+
+
+
+
+
+input[type="submit"].light {
+  background-color: #E8E8E8;
 }
