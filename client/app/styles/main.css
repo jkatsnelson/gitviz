@@ -33,6 +33,13 @@ h1 {
   color: gray;
 }
 
+.slash {
+  margin-left: 5px;
+  margin-top: 20px;
+  font-size: 70px;
+  color: gray;
+}
+
 .initial-search input[type="text"] {
   font-size: 30px;
   padding: 20px;
