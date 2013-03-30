@@ -86,8 +86,8 @@ h1 {
   font-size: 30px;
   padding: 20px;
   line-height: 30px;
-  /*width: 585px;*/
-  width: 100%;
+  width: 585px;
+  /*width: 100%;*/
 }
 .nth-search button {
   padding: 22px 22px 22px 0;
@@ -100,17 +100,20 @@ h1 {
   border-style: none;
 }
 .nth-search input[type="submit"] {
-  padding: 0px;
-  width: 0px;
+  padding: 22px;
+  width: 270px;
   font-size: 36px;
   font-weight: bold;
   color: white;
   background-color: #E8E8E8;
   border-style: none;
   float: right;
-  display: hidden;
+  /*display: hidden;*/
 }
 
+.nth-search input[type="submit"].light {
+  background-color: #E8E8E8;
+}
 
 
 /*
@@ -167,6 +170,11 @@ h1 {
   background-color: red;
   border-style: none;
 }
+
+.repo-search input[type="submit"].light {
+  background-color: #E8E8E8;
+}
+
 .repo-search .right {
   margin-left: 11px;
 }
@@ -177,3 +185,6 @@ h1 {
 .cityListing {
 
 }
+
+
+

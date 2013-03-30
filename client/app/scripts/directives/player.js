@@ -66,7 +66,7 @@ angular.module('githubleagueClientApp')
           this.nodes = [];
           this.force = null;
           this.circles = null;
-          this.fill_color = d3.scale.ordinal().domain(["nightOwl", "dayTripper"]).range(["#3229d2", "#FF9700"]);
+          this.fill_color = d3.scale.ordinal().domain(["nightOwl", "dayTripper"]).range(["#3229d2", "red"]); // old day #FF9700
           this.create_nodes();
           this.create_vis();
           return this;
