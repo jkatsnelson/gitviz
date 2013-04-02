@@ -1,6 +1,6 @@
 {
   "name": "fantasy-github",
-  "version": "0.0.1",
+  "version": "0.0.1-1",
   "private": true,
   "dependencies": {
     "express": "3.1.0",
@@ -17,7 +17,11 @@
     "googlemaps": "*"
   },
   "engines": {
-    "node": "0.10.2",
+    "node": "0.8.9",
     "npm": "1.2.12"
+  },
+  "subdomain": "gitviz",
+  "scripts": {
+    "start": "node server/js/server.js"
   }
 }
