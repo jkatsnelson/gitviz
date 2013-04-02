@@ -5,7 +5,7 @@ angular.module('githubleagueClientApp')
     return {
       template: '<div class="mapContainer"></div>'
               + '<div class="cityRankings">'
-                + '<h1>Top three cities by commits</h1>'
+                + '<h1>Top cities by commits</h1>'
                 + '<div class="cityListing"></div>'
               + '</div>',
       restrict: 'E',
@@ -17,7 +17,7 @@ angular.module('githubleagueClientApp')
           var map = d3.select(".map");
           var width = 900;
           var height = ht;
-          var tick = 250;
+          var tick = 50;
 
           // I discovered that the unscaled equirectangular map is 640x360. Thus, we
           // should scale our map accordingly. Depending on the width ratio of the new
@@ -55,7 +55,6 @@ angular.module('githubleagueClientApp')
              .delay(function(d,i) { return (i+1) * tick; })
              .duration(function(d, i) { return tick; })
              .attr('cx', function(d) {
-              console.log('cx: ',d);
                return projection([d.lon, d.lat])[0]; //projection(d.lon, d.lat)[0];
              })
              .attr('cy', function(d) {
@@ -71,33 +70,35 @@ angular.module('githubleagueClientApp')
              .transition().ease("linear")
              .delay(function(d, i) { return (i+2) * tick - 10; })
              .duration()
-             .attr('fill', 'red')
+             .attr("fill", function(d) {
+               return d.fill = d3.hsl(Math.random() * 360, 1, .5);
+             })
              .attr('r', 6)
              .transition().ease("linear")
              .delay(function(d, i) { return (i+2) * tick + 30; })
-             .attr('fill', 'black')
-             .attr('r', 3)
+             .attr('r', 14)
+             .attr("opacity", 0.6)
 
-          map.selectAll("text")
-            .data(dataset)
-            .enter()
-            .append("text")
-            .transition()
-            .attr('x', 605)
-            .attr('y', 100)
-            .transition().ease("linear")
-            .delay(function(d,i) { return (i) * tick; })
-            .transition()
-            .delay(function(d, i) { return (i + 1) * tick; })
-            .duration(5000)
-            .text(function(d, i) { return d.city; })
-            .attr("x", 605)
-            .attr("y", 360)
-            .attr("class", "scrollingCity")
-            .attr("font-size", "14px")
-            .attr("font-family", 'Arial')
-            .attr("fill", "black")
-            .remove()
+
+          // map.selectAll("text")
+          //   .data(dataset)
+          //   .enter()
+          //   .append("text")
+          //   .transition()
+          //   .attr('x', 605)
+          //   .attr('y', 100)
+          //   .transition().ease("linear")
+          //   .delay(function(d,i) { return (i) * tick; })
+          //   .transition()
+          //   .delay(function(d, i) { return (i + 1) * tick; })
+          //   .duration(5000)
+          //   .text(function(d, i) { return d.city; })
+          //   .attr("x", 605)
+          //   .attr("y", 360)
+          //   .attr("class", "scrollingCity")
+          //   .attr("font-size", "14px")
+          //   .attr("font-family", 'Arial')
+          //   .remove()
 
             // Display top ten cities by frequency
             var cityCounts = _(dataset).chain().countBy('city').pairs()
