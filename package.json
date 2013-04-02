@@ -17,7 +17,7 @@
     "googlemaps": "*"
   },
   "engines": {
-    "node": "0.8.9",
+    "node": "0.8.6",
     "npm": "1.2.12"
   },
   "subdomain": "gitviz",
