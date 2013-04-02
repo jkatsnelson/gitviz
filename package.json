@@ -17,7 +17,7 @@
     "googlemaps": "*"
   },
   "engines": {
-    "node": "*",
+    "node": "0.10.2",
     "npm": "*"
   }
 }
