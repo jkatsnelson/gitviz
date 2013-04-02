@@ -87,7 +87,7 @@ h1 {
   font-size: 36px;
   font-weight: bold;
   text-align: left;
-  color: #E8E8E8;
+  color: #DCDCDC;
   background-color: white;
   border-style: none;
 }
@@ -132,7 +132,7 @@ h1 {
   font-size: 36px;
   font-weight: bold;
   color: white;
-  background-color: #E8E8E8;
+  background-color: #DCDCDC;
   border-style: none;
   float: right;
 }
@@ -207,5 +207,5 @@ h1 {
 
 
 input[type="submit"].light {
-  background-color: #E8E8E8;
+  background-color: #DCDCDC;
 }
