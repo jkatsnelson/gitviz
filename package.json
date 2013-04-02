@@ -15,5 +15,9 @@
     "request": "*",
     "http-link": "*",
     "googlemaps": "*"
+  },
+  "engines": {
+    "node": "*",
+    "npm": "*"
   }
 }
