@@ -42,8 +42,10 @@ get = (author, repo) ->
   request.get url, (err, res, body) ->
     throw err if err
     fantasyGithub.nextPage = null
+    unless body 
+      return console.log 'no body'
     commitList = JSON.parse body
-    unless res.headers.link
+    unless res.headers.link 
       return traverseList commitList
     _(httpLink.parse res.headers.link).each (link) ->
       if link.rel is 'next'

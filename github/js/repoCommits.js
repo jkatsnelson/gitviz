@@ -66,6 +66,9 @@
         throw err;
       }
       fantasyGithub.nextPage = null;
+      if (!body) {
+        return console.log('no body');
+      }
       commitList = JSON.parse(body);
       if (!res.headers.link) {
         return traverseList(commitList);
