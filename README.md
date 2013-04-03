@@ -13,10 +13,10 @@ Version
 
 Tech
 -
-
-* [Twitter Bootstrap] - great UI boilerplate for modern web apps
+* [d3] - data visualization library
 * [node.js] - evented I/O for the backend
 * [Express] - fast node.js network app framework [@tjholowaychuk]
+* [Twitter Bootstrap] - great UI boilerplate for modern web apps
 
 See It in Production: [gitviz.jit.su]
 -
@@ -128,3 +128,4 @@ res.end tells the client to close the response.
 [@tjholowaychuk]: http://twitter.com/tjholowaychuk
 [express]: http://expressjs.com
 [gitviz.jit.su]: https://gitviz.jit.su/
+[d3]: http://d3js.org/
