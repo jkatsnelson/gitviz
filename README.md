@@ -123,6 +123,11 @@ Resulting in ending the response and closing the array on the client:
 
 res.end tells the client to close the response.
 
+TODOS
+-
+
+* Add autocomplete of repos after someone adds an author.
+
 [node.js]: http://nodejs.org
 [Twitter Bootstrap]: http://twitter.github.com/bootstrap/
 [@tjholowaychuk]: http://twitter.com/tjholowaychuk
